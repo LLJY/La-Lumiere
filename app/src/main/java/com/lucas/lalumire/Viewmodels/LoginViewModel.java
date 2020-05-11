@@ -92,15 +92,6 @@ public class LoginViewModel extends ViewModel {
                 });
             }
         }).start();
-        //same code in kt...
-//        livedata = async{
-//            firebaseAuthRepository.Login(username, password)
-//        }.await()
-//        liveDataArrayList.add(livedata)
-//        livedata.observeForever(new Observer{
-//            mutableSuccess.postValue(it)
-//            liveDataArrayList.remove(it)
-//        }
 
 
     }
