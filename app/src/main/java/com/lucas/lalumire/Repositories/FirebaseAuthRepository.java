@@ -20,7 +20,6 @@ public class FirebaseAuthRepository {
     }
     public MutableLiveData<Boolean> SignUp(String email, String password, String name, final String username){
         final MutableLiveData<Boolean> isSuccessfulLiveData = new MutableLiveData<>();
-        Log.d("asd", "he");
         //sign out if any user is signed in.
         mAuth.signOut();
         //start create user
@@ -47,6 +46,7 @@ public class FirebaseAuthRepository {
                         }
                     });
                 }else{
+                    Log.d("FirebaseAuthRepository:", String.valueOf(task.getException()));
                     isSuccessfulLiveData.postValue(false);
                 }
             }

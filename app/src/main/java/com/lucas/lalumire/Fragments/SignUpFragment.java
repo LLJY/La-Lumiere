@@ -30,6 +30,7 @@ public class SignUpFragment extends Fragment {
     //use kotlin's Lazy property to initialize the viewmodel
     private Lazy<LoginViewModel> loginViewModel = inject(LoginViewModel.class);
     private FragmentSignUpBinding binding;
+
     public static SignUpFragment newInstance() {
         return new SignUpFragment();
     }
@@ -75,30 +76,49 @@ public class SignUpFragment extends Fragment {
                 String passwordAgain = Objects.requireNonNull(binding.passwordAgainBox.getEditText()).getText().toString();
                 String name = Objects.requireNonNull(binding.nameBox.getEditText()).getText().toString();
                 String username = Objects.requireNonNull(binding.usernameBox.getEditText()).getText().toString();
-                if(password.equals(passwordAgain)) {
+                Boolean passed = true;
+                //check if fields are empty, set passed to false if any of them fail the necessary checks
+                if (email.isEmpty()) {
+                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.emailBox, "Required");
+                    passed = false;
+                }
+                if (password.isEmpty()) {
+                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.passwordBox, "Required");
+                    passed = false;
+                }
+                if (passwordAgain.isEmpty()) {
+                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.passwordAgainBox, "Required");
+                    passed = false;
+                }
+                if (name.isEmpty()) {
+                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.nameBox, "Required");
+                    passed = false;
+                }
+                if (username.isEmpty()) {
+                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.usernameBox, "Required");
+                    passed = false;
+                }
+                if (password.equals(passwordAgain) && passed) {
                     loginViewModel.getValue().SignUp(email, password, name, username);
                     //observe the success variable
                     loginViewModel.getValue().getLiveData().observe(getViewLifecycleOwner(), new Observer() {
                         @Override
                         public void onChanged(Object o) {
-                            if(o != null){
+                            if (o != null) {
                                 boolean it = (Boolean) o;
-                                if(it){
+                                if (it) {
                                     requireActivity().onBackPressed();
                                 }
                             }
                         }
                     });
-                }else{
-                    ((LoginActivity)requireActivity()).showSnackError("Passwords do not match");
-                    binding.passwordBox.setErrorEnabled(true);
-                    binding.passwordAgainBox.setErrorEnabled(true);
-                    binding.passwordBox.setError("Passwords do not match");
-                    binding.passwordAgainBox.setError("Passwords do not match");
+                } else {
+                    ((LoginActivity) requireActivity()).showSnackError("Passwords do not match", binding.passwordBox, "Required");
+                    ((LoginActivity) requireActivity()).showSnackError("Passwords do not match", binding.passwordAgainBox, "Required");
                 }
             }
         });
-
+        //store the credentials in the viewmodel so data is not lost when activity is destroyed.
         //Usually I would use databinding, but right now it's not very good on android.
         Objects.requireNonNull(binding.emailBox.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,6 +128,7 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                resetWarnings();
 
             }
 
@@ -126,6 +147,7 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                resetWarnings();
 
             }
 
@@ -143,6 +165,7 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                resetWarnings();
 
             }
 
@@ -160,13 +183,14 @@ public class SignUpFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                resetWarnings();
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                binding.passwordBox.setError(null);
-                binding.passwordAgainBox.setError(null);
+//                we do not need to store the values in the viewmodel because we should try not to
+//                store passwords as much as possible
             }
         };
 
@@ -176,14 +200,24 @@ public class SignUpFragment extends Fragment {
 
         syncWithViewModel();
     }
-    /** activity/fragment gets destroyed when user leaves or screen is rotated but ViewModel stays active until app is killed by user or LMK/LMKD.
+
+    /**
+     * activity/fragment gets destroyed when user leaves or screen is rotated but ViewModel stays active until app is killed by user or LMK/LMKD.
      * Create a function to get stored variables from ViewModel to sync the view up with the previous state before it was destroyed.
      */
-    private void syncWithViewModel(){
+    private void syncWithViewModel() {
         binding.agreeTermsCheck.setChecked(loginViewModel.getValue().agreedToTerms);
         binding.doneButton.setEnabled(loginViewModel.getValue().agreedToTerms);
         Objects.requireNonNull(binding.emailBox.getEditText()).setText(loginViewModel.getValue().Email);
         Objects.requireNonNull(binding.usernameBox.getEditText()).setText(loginViewModel.getValue().Username);
         Objects.requireNonNull(binding.nameBox.getEditText()).setText(loginViewModel.getValue().Name);
+    }
+    //reset all the errors
+    private void resetWarnings(){
+        binding.emailBox.setError(null);
+        binding.nameBox.setError(null);
+        binding.passwordBox.setError(null);
+        binding.passwordAgainBox.setError(null);
+        binding.usernameBox.setError(null);
     }
 }

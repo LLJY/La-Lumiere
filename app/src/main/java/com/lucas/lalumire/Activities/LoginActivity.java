@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 import com.lucas.lalumire.FragmentTransactions;
 import com.lucas.lalumire.Fragments.LoginFragment;
 import com.lucas.lalumire.Fragments.SignUpFragment;
@@ -48,9 +49,9 @@ public class LoginActivity extends AppCompatActivity {
                     //no smart casting in Java so cast manually. Fuck Java.
                     boolean it = (boolean) o;
                     if (it) {
-                        showSnackError("Success");
+                        showSnackMessage("Success");
                     } else {
-                        showSnackError("Error");
+                        showSnackMessage("An Error Has Occured, Please try again");
                     }
                     //stop triggering the observers.
                     loginViewModel.getValue().resetLiveData();
@@ -60,9 +61,14 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    public void showSnackError(String message){
-        Log.d("a", message);
+    public void showSnackError(String message, TextInputLayout input, String textFieldMessage){
+        Log.d("snackErr", message);
         Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show();
+        input.setError(textFieldMessage);
+    }
+
+    public void showSnackMessage(String message){
+
     }
 
     @Override
