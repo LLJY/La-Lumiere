@@ -70,11 +70,11 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //get all the data from the fields
-                String email = Objects.requireNonNull(binding.usernameBox.getEditText()).getText().toString();
+                String email = Objects.requireNonNull(binding.emailBox.getEditText()).getText().toString();
                 String password = Objects.requireNonNull(binding.passwordBox.getEditText()).getText().toString();
                 String passwordAgain = Objects.requireNonNull(binding.passwordAgainBox.getEditText()).getText().toString();
-                String name = binding.usernameBox.getEditText().getText().toString();
-                String username = binding.usernameBox.getEditText().getText().toString();
+                String name = Objects.requireNonNull(binding.nameBox.getEditText()).getText().toString();
+                String username = Objects.requireNonNull(binding.usernameBox.getEditText()).getText().toString();
                 if(password.equals(passwordAgain)) {
                     loginViewModel.getValue().SignUp(email, password, name, username);
                     //observe the success variable
@@ -117,6 +117,7 @@ public class SignUpFragment extends Fragment {
 
             }
         });
+
         Objects.requireNonNull(binding.usernameBox.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -133,6 +134,7 @@ public class SignUpFragment extends Fragment {
                 loginViewModel.getValue().Username = s.toString();
             }
         });
+
         Objects.requireNonNull(binding.nameBox.getEditText()).addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -149,6 +151,7 @@ public class SignUpFragment extends Fragment {
                 loginViewModel.getValue().Name = s.toString();
             }
         });
+
         TextWatcher passwordFieldsWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -166,6 +169,7 @@ public class SignUpFragment extends Fragment {
                 binding.passwordAgainBox.setError(null);
             }
         };
+
         //set the same password box listener
         Objects.requireNonNull(binding.passwordAgainBox.getEditText()).addTextChangedListener(passwordFieldsWatcher);
         Objects.requireNonNull(binding.passwordBox.getEditText()).addTextChangedListener(passwordFieldsWatcher);
