@@ -49,15 +49,15 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         //set the username text from viewmodel, worth noting that this is actually email.
-        binding.usernameText.getEditText().setText(loginViewModel.getValue().loginUsername);
+        binding.emailBox.getEditText().setText(loginViewModel.getValue().loginUsername);
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = Objects.requireNonNull(binding.usernameText.getEditText()).getText().toString();
+                String email = Objects.requireNonNull(binding.emailBox.getEditText()).getText().toString();
                 String password = Objects.requireNonNull(binding.passwordText.getEditText()).getText().toString();
                 //check if the individual textfields are empty
                 if(email.isEmpty()){
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.usernameText, "Required");
+                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.emailBox, "Required");
                 }if(password.isEmpty()){
                     ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.passwordText, "Required");
                 }//if both are not empty
@@ -66,7 +66,7 @@ public class LoginFragment extends Fragment {
                 }
             }
         });
-        binding.usernameText.getEditText().addTextChangedListener(new TextWatcher() {
+        binding.emailBox.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -79,7 +79,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                binding.usernameText.setError(null);
+                binding.emailBox.setError(null);
                 binding.passwordText.setError(null);
             }
         });
@@ -96,7 +96,7 @@ public class LoginFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                binding.usernameText.setError(null);
+                binding.emailBox.setError(null);
                 binding.passwordText.setError(null);
             }
         });
