@@ -12,7 +12,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
-import java.util.concurrent.Executor;
 
 public class FirebaseAuthRepository {
     private FirebaseAuth mAuth;

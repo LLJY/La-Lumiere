@@ -14,8 +14,6 @@ import com.lucas.lalumire.Repositories.FirebaseAuthRepository;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-
 public class LoginViewModel extends ViewModel {
     private @NonNull
     FirebaseAuthRepository firebaseAuthRepository;

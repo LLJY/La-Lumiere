@@ -26,7 +26,6 @@ import kotlin.Lazy;
 
 import static org.koin.java.KoinJavaComponent.inject;
 
-
 public class SignUpFragment extends Fragment {
     //use kotlin's Lazy property to initialize the viewmodel
     private Lazy<LoginViewModel> loginViewModel = inject(LoginViewModel.class);
