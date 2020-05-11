@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.lucas.lalumire.Models.LoginActivityStatus;
 import com.lucas.lalumire.Repositories.FirebaseAuthRepository;
 
 import org.jetbrains.annotations.NotNull;
@@ -17,10 +18,12 @@ import org.jetbrains.annotations.NotNull;
 public class LoginViewModel extends ViewModel {
     private @NonNull
     FirebaseAuthRepository firebaseAuthRepository;
-    private MutableLiveData<Boolean> mutableSuccess = new MutableLiveData<>();
+    private MutableLiveData<LoginActivityStatus> mutableSuccess = new MutableLiveData<>();
     //store variables
     public String Email = "";
     public String Username = "";
+    //this is to be stored if the user has succesfully signed up, so we fill the username textbox
+    public String loginUsername = "";
     public String Name = "";
     public boolean agreedToTerms = false;
     //determines if currently on the signup screen;
@@ -51,7 +54,13 @@ public class LoginViewModel extends ViewModel {
                         result.observeForever(new Observer<Boolean>() {
                             @Override
                             public void onChanged(Boolean aBoolean) {
-                                mutableSuccess.postValue(aBoolean);
+                                //notify the observers in activity
+                                if(aBoolean) {
+                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_SIGN_UP_SUCCESS);
+                                    onSignUpSuccess();
+                                }else{
+                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_ERR);
+                                }
                                 result.removeObserver(this);
                             }
                         });
@@ -77,8 +86,12 @@ public class LoginViewModel extends ViewModel {
                         result.observeForever(new Observer<Boolean>() {
                             @Override
                             public void onChanged(Boolean aBoolean) {
-                                mutableSuccess.postValue(aBoolean);
-                                //we don't need to observe it anymore
+                                //notify the observers in activity
+                                if(aBoolean) {
+                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_LOGIN_SUCCESS);
+                                }else{
+                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_ERR);
+                                }
                                 result.removeObserver(this);
                             }
                         });
@@ -89,7 +102,7 @@ public class LoginViewModel extends ViewModel {
 
 
     }
-    /* When the Activity is restarted livedata erroneously sends an update to the observers.
+    /** When the Activity is restarted livedata erroneously sends an update to the observers.
      * This is crucial as the activity listens for updates to call showSnackError()
      * Stop this behaviour by setting the value to null as the app only checks for true/false.
      * This is bad for null safety in general, however in this case it should be perfectly fine.
@@ -97,6 +110,17 @@ public class LoginViewModel extends ViewModel {
     public void resetLiveData(){
         //set value does not trigger the observers.
         mutableSuccess.setValue(null);
+    }
+
+    /** Quality of life function that clears the sign up screen variables and assigns a value to
+     * loginUsername, so that the username textbox is pre-filled for the user to sign in.
+     */
+    public void onSignUpSuccess(){
+        this.loginUsername = this.Email;
+        this.Email = "";
+        this.Username = "";
+        this.Name = "";
+        this.agreedToTerms = false;
     }
 
 }

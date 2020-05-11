@@ -26,6 +26,7 @@ public class FirebaseAuthRepository {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                //it is redundant to continue with any of this if login is unsuccesful.
                 if(task.isSuccessful()) {
                     //firebase automatically logs in when sign up is successful, so get current user
                     FirebaseUser user = mAuth.getCurrentUser();

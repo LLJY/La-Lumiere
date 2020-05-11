@@ -48,6 +48,8 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        //set the username text from viewmodel, worth noting that this is actually email.
+        binding.usernameText.getEditText().setText(loginViewModel.getValue().loginUsername);
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

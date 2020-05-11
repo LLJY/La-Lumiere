@@ -12,6 +12,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.lucas.lalumire.FragmentTransactions;
 import com.lucas.lalumire.Fragments.LoginFragment;
 import com.lucas.lalumire.Fragments.SignUpFragment;
+import com.lucas.lalumire.Models.LoginActivityStatus;
 import com.lucas.lalumire.R;
 import com.lucas.lalumire.Viewmodels.LoginViewModel;
 import com.lucas.lalumire.databinding.ActivityMainBinding;
@@ -42,18 +43,22 @@ public class LoginActivity extends AppCompatActivity {
         loginViewModel.getValue().getLiveData().observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
-                Log.d("bb", String.valueOf(o));
-                //sometimes observers can be triggered more than once, check if null as we could have
-                //already called resetLiveData(), leading to an NRE.
-                if(o != null) {
-                    //no smart casting in Java so cast manually. Fuck Java.
-                    boolean it = (boolean) o;
-                    if (it) {
-                        showSnackMessage("Success");
-                    } else {
-                        showSnackMessage("An Error Has Occured, Please try again");
+                if(o!=null){
+                    //cast object o to loginstatus
+                    LoginActivityStatus it = (LoginActivityStatus) o;
+                    switch(it){
+                        //if an error has occured, just print and error on the snackbar.
+                        case STATUS_ERR:
+                            showSnackMessage("An error has occurred");
+                            break;
+                        case STATUS_LOGIN_SUCCESS:
+                            //when login success, open mainactivity
+                            showSnackMessage("Success");
+                            //TODO finish MainActivity
+                        case STATUS_SIGN_UP_SUCCESS:
+                            //exit the fragment
+                            onBackPressed();
                     }
-                    //stop triggering the observers.
                     loginViewModel.getValue().resetLiveData();
                 }
             }
