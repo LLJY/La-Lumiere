@@ -29,7 +29,6 @@ public class LoginViewModel extends ViewModel {
     public boolean isSignUp = false;
     /* NEVER NEVER NEVER expose MutableLiveData, so expose a LiveData version of it.
      * This is supposed to look like val livedata : LiveData get() = mutableSuccess
-     * But the school is retarded and we can't use Kotlin, so deal with the stupid fucking boilerplates.
      */
     public LiveData getLiveData() {
         return this.mutableSuccess;
@@ -68,9 +67,6 @@ public class LoginViewModel extends ViewModel {
 
     public void Login(final String email, final String password) {
         //set the livedata to the one returned by the function to observe for errors
-        /* Okay seriously, threading is fucking cancer and garbage in Java. Coroutines are much better in kotlin.
-         * This seriously affects efficiency and performance. Not to fucking mention that we are going to write this in TS/Ionic
-         */
         new Thread(new Runnable() {
             @Override
             //run the login method in a thread to avoid blocking the ui
