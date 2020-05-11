@@ -21,17 +21,21 @@ public class FirebaseAuthRepository {
     public MutableLiveData<Boolean> SignUp(String email, String password, String name, final String username){
         final MutableLiveData<Boolean> isSuccessfulLiveData = new MutableLiveData<>();
         Log.d("asd", "he");
+        //sign out if any user is signed in.
         mAuth.signOut();
+        //start create user
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+                    //firebase automatically logs in when sign up is successful, so get current user
                     FirebaseUser user = mAuth.getCurrentUser();
+                    //update the user profile to include username
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(username)
                             .build();
+                    //null safety
                     assert user != null;
-
                     user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
