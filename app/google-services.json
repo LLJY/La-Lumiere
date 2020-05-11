@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "8046173692",
+    "firebase_url": "https://la-lumire.firebaseio.com",
+    "project_id": "la-lumire",
+    "storage_bucket": "la-lumire.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:8046173692:android:016fc83c15fe8b546c2679",
+        "android_client_info": {
+          "package_name": "com.lucas.lalumire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "8046173692-krc0ekdeu5c8b6th8jd8679goa1te6ao.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucas.lalumire",
+            "certificate_hash": "5389579d15a24b04ffc7a2f8bfec96ae66d4f17a"
+          }
+        },
+        {
+          "client_id": "8046173692-8q0qt2sbpps9o976hkdgd26eejaq0gs6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgZ_Y_S7O_GQE7-NBMM_wqYX5YK1IIfWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "8046173692-8q0qt2sbpps9o976hkdgd26eejaq0gs6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragments.LoginFragment">
+    <ImageView
+        android:id="@+id/mainImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/app_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="36dp"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/mainTextView"
+        app:layout_constraintTop_toBottomOf="@id/mainImage"
+        app:layout_constraintStart_toStartOf="@id/mainImage"
+        app:layout_constraintEnd_toEndOf="@id/mainImage"
+        android:text="La Lumière"
+        android:textSize="28sp"
+        android:fontFamily="casual"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/usernameText"
+        app:errorEnabled="true"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintTop_toBottomOf="@id/mainTextView"
+        app:layout_constraintStart_toStartOf="@id/mainImage"
+        app:layout_constraintEnd_toEndOf="@id/mainImage"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Username">
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/passwordText"
+        app:errorEnabled="true"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintTop_toBottomOf="@id/usernameText"
+        app:layout_constraintStart_toStartOf="@id/usernameText"
+        app:layout_constraintEnd_toEndOf="@id/usernameText"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Enter your password">
+        <com.google.android.material.textfield.TextInputEditText
+            android:inputType="textPassword"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginStart="104dp"
+        android:layout_marginEnd="104dp"
+        app:layout_constraintStart_toStartOf="@id/passwordText"
+        app:layout_constraintEnd_toEndOf="@id/passwordText"
+        app:layout_constraintTop_toBottomOf="@id/passwordText"
+        android:layout_marginTop="24dp"
+        android:text="LOGIN"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/primaryTextColor"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/sign_up_button"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/loginButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:text="Not a member yet? Join us!"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OR"
+        android:textStyle="bold"
+        android:insetBottom="0dp"
+        app:layout_constraintStart_toStartOf="@id/google_button"
+        app:layout_constraintEnd_toEndOf="@id/google_button"
+        android:layout_marginBottom="6dp"
+        app:layout_constraintBottom_toTopOf="@id/google_button"/>
+
+    <com.shobhitpuri.custombuttons.GoogleSignInButton
+        android:id="@+id/google_button"
+        android:text="Sign in with Google"
+        android:layout_height="56dp"
+        android:layout_width="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
