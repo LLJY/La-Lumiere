@@ -38,8 +38,8 @@ public class LoginViewModel extends ViewModel {
 
 
     //constructor includes an instance of the authentication repository.
-    public LoginViewModel() {
-        this.firebaseAuthRepository = new FirebaseAuthRepository();
+    public LoginViewModel(@NotNull FirebaseAuthRepository firebaseRepo) {
+        this.firebaseAuthRepository = firebaseRepo;
     }
 
     public void SignUp(final String email, final String password, final String name, final String username) {
