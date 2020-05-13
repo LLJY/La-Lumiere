@@ -9,14 +9,12 @@ import androidx.lifecycle.Observer;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.lucas.lalumire.Activities.LoginActivity;
-import com.lucas.lalumire.R;
 import com.lucas.lalumire.Viewmodels.LoginViewModel;
 import com.lucas.lalumire.databinding.FragmentSignUpBinding;
 
@@ -79,23 +77,23 @@ public class SignUpFragment extends Fragment {
                 Boolean passed = true;
                 //check if fields are empty, set passed to false if any of them fail the necessary checks
                 if (email.isEmpty()) {
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.emailBox, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.emailBox, "Required");
                     passed = false;
                 }
                 if (password.isEmpty()) {
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.passwordBox, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.passwordBox, "Required");
                     passed = false;
                 }
                 if (passwordAgain.isEmpty()) {
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.passwordAgainBox, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.passwordAgainBox, "Required");
                     passed = false;
                 }
                 if (name.isEmpty()) {
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.nameBox, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.nameBox, "Required");
                     passed = false;
                 }
                 if (username.isEmpty()) {
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.usernameBox, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.usernameBox, "Required");
                     passed = false;
                 }
                 if (password.equals(passwordAgain) && passed) {
@@ -113,8 +111,8 @@ public class SignUpFragment extends Fragment {
                         }
                     });
                 } else {
-                    ((LoginActivity) requireActivity()).showSnackError("Passwords do not match", binding.passwordBox, "Required");
-                    ((LoginActivity) requireActivity()).showSnackError("Passwords do not match", binding.passwordAgainBox, "Required");
+                    ((LoginActivity) requireActivity()).showTextError("Passwords do not match", binding.passwordBox, "Required");
+                    ((LoginActivity) requireActivity()).showTextError("Passwords do not match", binding.passwordAgainBox, "Required");
                 }
             }
         });

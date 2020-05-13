@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +56,9 @@ public class LoginFragment extends Fragment {
                 String password = Objects.requireNonNull(binding.passwordText.getEditText()).getText().toString();
                 //check if the individual textfields are empty
                 if(email.isEmpty()){
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.emailBox, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.emailBox, "Required");
                 }if(password.isEmpty()){
-                    ((LoginActivity)requireActivity()).showSnackError("Error, one or more fields are empty!", binding.passwordText, "Required");
+                    ((LoginActivity)requireActivity()).showTextError("Error, one or more fields are empty!", binding.passwordText, "Required");
                 }//if both are not empty
                 if(!email.isEmpty() && !password.isEmpty()){
                     loginViewModel.getValue().Login(email, password);

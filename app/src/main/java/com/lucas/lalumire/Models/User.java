@@ -1,6 +1,18 @@
 package com.lucas.lalumire.Models;
 
 public class User {
+    public String uid;
+    public String Name;
+    public String Email;
+    public UserType userType;
+
+    public User(String uid, String name, String email, UserType userType) {
+        this.uid = uid;
+        Name = name;
+        Email = email;
+        this.userType = userType;
+    }
+
     public String getUid() {
         return uid;
     }
@@ -25,13 +37,15 @@ public class User {
         Email = email;
     }
 
-    public String uid;
-    public String Name;
-    public String Email;
-
-    public User(String uid, String name, String email) {
-        this.uid = uid;
-        Name = name;
-        Email = email;
+    public UserType getUserType() {
+        return userType;
     }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
+    }
+
+
+
+
 }

@@ -1,4 +1,4 @@
-package com.lucas.lalumire.Fragments;
+package com.lucas.lalumire.Viewmodels;
 
 import androidx.lifecycle.ViewModel;
 

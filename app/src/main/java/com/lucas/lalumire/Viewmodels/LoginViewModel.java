@@ -10,14 +10,22 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.lucas.lalumire.Models.LoginActivityStatus;
 import com.lucas.lalumire.Repositories.FirebaseAuthRepository;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
+import kotlin.Lazy;
+
+import static org.koin.java.KoinJavaComponent.inject;
+
 public class LoginViewModel extends ViewModel {
     private @NonNull
     FirebaseAuthRepository firebaseAuthRepository;
+    Lazy<FirebaseAuth> mAuthLazy = inject(FirebaseAuth.class);
     private MutableLiveData<LoginActivityStatus> mutableSuccess = new MutableLiveData<>();
     //store variables
     public String Email = "";

@@ -11,14 +11,22 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 
 public class FirebaseAuthRepository {
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mStore;
     public FirebaseAuthRepository(){
         mAuth = FirebaseAuth.getInstance();
+        mStore = FirebaseFirestore.getInstance();
     }
-    public MutableLiveData<Boolean> SignUp(String email, String password, String name, final String username){
+    public MutableLiveData<Boolean> SignUp(String email, String password, final String name, final String username){
         final MutableLiveData<Boolean> isSuccessfulLiveData = new MutableLiveData<>();
         //sign out if any user is signed in.
         mAuth.signOut();
@@ -39,11 +47,22 @@ public class FirebaseAuthRepository {
                     user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            //sign out so user has to sign in again.
-                            mAuth.signOut();
-                            Log.d("a", String.valueOf(task.isSuccessful()));
-                            //post the value of isSuccessful to the observers
-                            isSuccessfulLiveData.postValue(task.isSuccessful());
+                            //add name and user type to firestore
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("Name", name);
+                            user.put("Type", "Buyer");
+                            user.put("UID", Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
+                            mStore.collection("users")
+                                    .add(user)
+                                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<DocumentReference> task) {
+                                            isSuccessfulLiveData.postValue(task.isSuccessful());
+                                            Log.d("a", String.valueOf(task.isSuccessful()));
+                                            //sign out so user has to sign in again.
+                                            mAuth.signOut();
+                                        }
+                                    });
                         }
                     });
                 }else{
@@ -68,4 +87,7 @@ public class FirebaseAuthRepository {
         return isSuccessfulLiveData;
 
     }
+//    public User getCurrentUser(){
+//
+//    }
 }

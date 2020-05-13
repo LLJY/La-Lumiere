@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -54,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                         case STATUS_LOGIN_SUCCESS:
                             //when login success, open mainactivity
                             showSnackMessage("Success");
-                            //TODO finish MainActivity
+                            startLoginActivity();
                         case STATUS_SIGN_UP_SUCCESS:
                             //exit the fragment
                             onBackPressed();
@@ -66,14 +67,28 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
-    public void showSnackError(String message, TextInputLayout input, String textFieldMessage){
+
+    /**
+     * Function to show error to the user and add error to the textfield.
+     * @param message
+     * @param input
+     * @param textFieldMessage
+     */
+    public void showTextError(String message, TextInputLayout input, String textFieldMessage){
         Log.d("snackErr", message);
         Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show();
         input.setError(textFieldMessage);
     }
 
     public void showSnackMessage(String message){
-
+        Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show();
+    }
+    private void startLoginActivity(){
+        Intent startLoginActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        //clear the backstack as it is undesirable for the user to enter the login screen again
+        startLoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        //TODO Pass MainActivity user's uid or token
+        startActivity(startLoginActivityIntent);
     }
 
     @Override
