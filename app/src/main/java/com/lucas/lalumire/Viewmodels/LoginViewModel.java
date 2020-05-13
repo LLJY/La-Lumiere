@@ -51,24 +51,20 @@ public class LoginViewModel extends ViewModel {
     }
 
     public void SignUp(final String email, final String password, final String name, final String username) {
+        mutableSuccess.postValue(LoginActivityStatus.STATUS_LOADING);
         //set the livedata to the one returned by the function to observe for errors
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final LiveData<Boolean> result = firebaseAuthRepository.SignUp(email, password, name, username);
+                final LiveData<LoginActivityStatus> result = firebaseAuthRepository.SignUp(email, password, name, username);
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        result.observeForever(new Observer<Boolean>() {
+                        result.observeForever(new Observer<LoginActivityStatus>() {
                             @Override
-                            public void onChanged(Boolean aBoolean) {
-                                //notify the observers in activity
-                                if(aBoolean) {
-                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_SIGN_UP_SUCCESS);
-                                    onSignUpSuccess();
-                                }else{
-                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_ERR);
-                                }
+                            public void onChanged(LoginActivityStatus loginActivityStatus) {
+                                //post value to observers in Activity
+                                mutableSuccess.postValue(loginActivityStatus);
                                 result.removeObserver(this);
                             }
                         });
@@ -82,24 +78,22 @@ public class LoginViewModel extends ViewModel {
 
     public void Login(final String email, final String password) {
         //set the livedata to the one returned by the function to observe for errors
+        mutableSuccess.postValue(LoginActivityStatus.STATUS_LOADING);
         new Thread(new Runnable() {
             @Override
             //run the login method in a thread to avoid blocking the ui
             public void run() {
-                final LiveData<Boolean> result = firebaseAuthRepository.Login(email, password);
+                final LiveData<LoginActivityStatus> result = firebaseAuthRepository.Login(email, password);
                 //observe on the mainthread as you cannot run observeForever on a background thread.
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        result.observeForever(new Observer<Boolean>() {
+                        result.observeForever(new Observer<LoginActivityStatus>() {
                             @Override
-                            public void onChanged(Boolean aBoolean) {
+                            public void onChanged(LoginActivityStatus a) {
                                 //notify the observers in activity
-                                if(aBoolean) {
-                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_LOGIN_SUCCESS);
-                                }else{
-                                    mutableSuccess.postValue(LoginActivityStatus.STATUS_ERR);
-                                }
+                               mutableSuccess.postValue(a);
+                               //we do not need the observer anymore
                                 result.removeObserver(this);
                             }
                         });

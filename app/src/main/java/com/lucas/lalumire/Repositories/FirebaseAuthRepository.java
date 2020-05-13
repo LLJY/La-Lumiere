@@ -13,6 +13,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.lucas.lalumire.Models.LoginActivityStatus;
+import com.google.firebase.auth.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +28,8 @@ public class FirebaseAuthRepository {
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
     }
-    public MutableLiveData<Boolean> SignUp(String email, String password, final String name, final String username){
-        final MutableLiveData<Boolean> isSuccessfulLiveData = new MutableLiveData<>();
+    public MutableLiveData<LoginActivityStatus> SignUp(String email, String password, final String name, final String username){
+        final MutableLiveData<LoginActivityStatus> isSuccessfulLiveData = new MutableLiveData<>();
         //sign out if any user is signed in.
         mAuth.signOut();
         //start create user
@@ -57,17 +59,45 @@ public class FirebaseAuthRepository {
                                     .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                         @Override
                                         public void onComplete(@NonNull Task<DocumentReference> task) {
-                                            isSuccessfulLiveData.postValue(task.isSuccessful());
                                             Log.d("a", String.valueOf(task.isSuccessful()));
                                             //sign out so user has to sign in again.
                                             mAuth.signOut();
+                                            if(task.isSuccessful()) {
+                                                isSuccessfulLiveData.postValue(LoginActivityStatus.STATUS_SIGN_UP_SUCCESS);
+                                            }else{
+                                                isSuccessfulLiveData.postValue(LoginActivityStatus.STATUS_ERR);
+                                            }
+
                                         }
                                     });
                         }
                     });
                 }else{
-                    Log.d("FirebaseAuthRepository:", String.valueOf(task.getException()));
-                    isSuccessfulLiveData.postValue(false);
+                    String errorCode = "";
+                    LoginActivityStatus returnCode;
+                    try {
+                        errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                    }catch (NullPointerException e){
+                        returnCode = LoginActivityStatus.STATUS_ERR;
+                    }
+                    //post the value of isSuccessful to the observers
+                    switch (errorCode){
+                        case "ERROR_INVALID_CREDENTIAL":
+                            returnCode = LoginActivityStatus.STATUS_INVALID_CREDENTIALS;
+                            break;
+                        case "ERROR_USER_NOT_FOUND":
+                            returnCode = LoginActivityStatus.STATUS_INVALID_USER;
+                            break;
+                        case "ERROR_WRONG_PASSWORD":
+                            returnCode = LoginActivityStatus.STATUS_INVALID_CREDENTIALS;
+                            break;
+                        default:
+                            returnCode = LoginActivityStatus.STATUS_ERR;
+                            break;
+
+                    }
+                    //TODO handle exceptions individually and post correct error messages in activity
+                    isSuccessfulLiveData.postValue(returnCode);
                 }
             }
 
@@ -75,13 +105,40 @@ public class FirebaseAuthRepository {
         //let ViewModel deal with the business logic when onComplete returns successful or not
         return isSuccessfulLiveData;
     }
-    public MutableLiveData<Boolean> Login(String email, String password){
-        final MutableLiveData<Boolean> isSuccessfulLiveData = new MutableLiveData<>();
+    public MutableLiveData<LoginActivityStatus> Login(String email, String password){
+        final MutableLiveData<LoginActivityStatus> isSuccessfulLiveData = new MutableLiveData<>();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                //post the value of isSuccessful to the observers
-                isSuccessfulLiveData.postValue(task.isSuccessful());
+                String errorCode = "";
+                LoginActivityStatus returnCode;
+                try {
+                    errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                }catch (NullPointerException e){
+                    returnCode = LoginActivityStatus.STATUS_ERR;
+                }
+                if(!task.isSuccessful()) {
+                    //post the value of isSuccessful to the observers
+                    switch (errorCode) {
+                        case "ERROR_INVALID_EMAIL":
+                            returnCode = LoginActivityStatus.STATUS_BAD_EMAIL;
+                            break;
+                        case "ERROR_CREDENTIAL_ALREADY_IN_USE":
+                            returnCode = LoginActivityStatus.STATUS_ACCOUNT_EXISTS;
+                            break;
+                        case "ERROR_WEAK_PASSWORD":
+                            returnCode = LoginActivityStatus.STATUS_WEAK_PASSWORD;
+                            break;
+                        case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
+                            returnCode = LoginActivityStatus.STATUS_ACCOUNT_EXISTS;
+                        default:
+                            returnCode = LoginActivityStatus.STATUS_ERR;
+                            break;
+                    }
+                    }else{
+                    returnCode = LoginActivityStatus.STATUS_LOGIN_SUCCESS;
+                }
+                isSuccessfulLiveData.postValue(returnCode);
             }
         });
         return isSuccessfulLiveData;

@@ -3,7 +3,9 @@ package com.lucas.lalumire.Activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,10 +22,12 @@ import com.lucas.lalumire.databinding.ActivityMainBinding;
 
 import kotlin.Lazy;
 import static org.koin.androidx.viewmodel.compat.ViewModelCompat.viewModel;
+import static org.koin.java.KoinJavaComponent.inject;
 
 public class LoginActivity extends AppCompatActivity {
     private Lazy<LoginViewModel> loginViewModel = viewModel(this, LoginViewModel.class);
     private ActivityMainBinding binding;
+    private ProgressDialog pd;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,16 +53,44 @@ public class LoginActivity extends AppCompatActivity {
                     LoginActivityStatus it = (LoginActivityStatus) o;
                     switch(it){
                         //if an error has occured, just print and error on the snackbar.
+                        case STATUS_LOADING:
+                            pd = ProgressDialog.show(LoginActivity.this, "Loading...", "Please Wait...");
+                            break;
+                        case STATUS_BAD_EMAIL:
+                            pd.dismiss();
+                            showSnackMessage("Invalid email format");
+                            break;
+                        case STATUS_INVALID_USER:
+                            pd.dismiss();
+                            showSnackMessage("User not found!");
+                            break;
+                        case STATUS_WEAK_PASSWORD:
+                            pd.dismiss();
+                            showSnackMessage("Weak password, must be 6 characters or longer!");
+                            break;
+                        case STATUS_ACCOUNT_EXISTS:
+                            pd.dismiss();
+                            showSnackMessage("Account already exists!");
+                            break;
+                        case STATUS_INVALID_CREDENTIALS:
+                            pd.dismiss();
+                            showSnackMessage("Invalid email or password");
+                            break;
                         case STATUS_ERR:
+                            pd.dismiss();
                             showSnackMessage("An error has occurred");
                             break;
                         case STATUS_LOGIN_SUCCESS:
+                            pd.dismiss();
                             //when login success, open mainactivity
-                            showSnackMessage("Success");
+                            showSnackMessage("Welcome back!");
                             startLoginActivity();
+                            break;
                         case STATUS_SIGN_UP_SUCCESS:
+                            pd.dismiss();
                             //exit the fragment
                             onBackPressed();
+                            break;
                     }
                     loginViewModel.getValue().resetLiveData();
                 }
