@@ -1,4 +1,4 @@
-package com.lucas.lalumire;
+package com.lucas.lalumire.Fragments;
 
 
 import androidx.annotation.NonNull;
