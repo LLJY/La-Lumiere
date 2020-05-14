@@ -34,6 +34,7 @@ import java.util.Objects;
  * Fragment/Screen specific variables will be kept in their own viewmodels.
  */
 public class MainViewModel extends AndroidViewModel {
+    FirebaseAuth mAuth;
     //should be injected by koin
     private FirestoreRepository firestoreRepository;
     //logged in user's details
@@ -47,6 +48,7 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application, @NonNull final FirestoreRepository firestoreRepository) {
         super(application);
         this.firestoreRepository = firestoreRepository;
+        mAuth = FirebaseAuth.getInstance();
         //automatically get the loggedInUser
         final LiveData<User> userObserveOnce = firestoreRepository.getUserInfo();
         userObserveOnce.observeForever(new Observer<User>() {
@@ -79,6 +81,13 @@ public class MainViewModel extends AndroidViewModel {
                 userObserveOnce.removeObserver(this);
 
             }
+            //listen for authentication changes
+            FirebaseAuth.AuthStateListener  a = new FirebaseAuth.AuthStateListener(){
+                @Override
+                public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                    mutableLoggedInUser.postValue(null);
+                }
+            };
         });
     }
 }

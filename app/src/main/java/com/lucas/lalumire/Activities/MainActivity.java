@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.lucas.lalumire.Fragments.FragmentTransactions;
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
                     //set the adapter when the user data is ready.
                     binding.bottomSheet.menuRecycler.setAdapter(mainViewModelLazy.getValue().menuBottomSheetAdapter);
                     binding.bottomSheet.menuRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                }else{
+                    Intent startLoginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
+                    //clear the backstack as it is undesirable for the user to enter the login screen again
+                    startLoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //TODO Pass MainActivity user's uid or token
+                    startActivity(startLoginActivityIntent);
                 }
             }
         });

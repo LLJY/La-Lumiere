@@ -126,10 +126,14 @@ public class FirebaseAuthRepository {
 
     }
     public Boolean isLoggedIn(){
-        if(mAuth.getCurrentUser() != null){
-            return true;
+        //get id token forces a reload, which will return true or false if successful
+        //if no users are logged in or user was deleted, it will return false.
+        try {
+            return !mAuth.getCurrentUser().getUid().isEmpty();
+        }catch (Exception e){
+            //if there is an NPE, the user does not exist.
+            return false;
         }
-        return false;
     }
 //    public User getCurrentUser(){
 //

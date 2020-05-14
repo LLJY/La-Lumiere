@@ -43,38 +43,44 @@ public class FirestoreRepository{
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                         if(task.isSuccessful()){
-                             //there is only one record expected so, select the first value in the array
-                             DocumentSnapshot document = Objects.requireNonNull(task.getResult()).getDocuments().get(0);
-                             String uid = document.getString("UID");
-                             String name = document.getString("Name");
-                             String userTypeString = document.getString("Type");
-                             UserType userType;
-                             //null safety
-                             assert userTypeString != null;
-                             //so any fuck ups in case will be spotted.
-                             userTypeString = userTypeString.toUpperCase();
-                             switch (userTypeString){
-                                 case "ADMIN":
-                                     userType = UserType.ADMIN;
-                                     break;
-                                 case "BUYER":
-                                     userType = UserType.BUYER;
-                                     break;
-                                 case "SELLER":
-                                     userType = UserType.SELLER;
-                                     break;
-                                 default:
-                                     throw new IllegalStateException("Unexpected value: " + userTypeString);
-                             }
-                             //create the new user object and post it to livedata.
-                             User user = new User(uid,name, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(),userType);
-                             returnLiveData.postValue(user);
+                        try {
+                            if (task.isSuccessful()) {
+                                //there is only one record expected so, select the first value in the array
+                                DocumentSnapshot document = Objects.requireNonNull(task.getResult()).getDocuments().get(0);
+                                String uid = document.getString("UID");
+                                String name = document.getString("Name");
+                                String userTypeString = document.getString("Type");
+                                UserType userType;
+                                //null safety
+                                assert userTypeString != null;
+                                //so any fuck ups in case will be spotted.
+                                userTypeString = userTypeString.toUpperCase();
+                                switch (userTypeString) {
+                                    case "ADMIN":
+                                        userType = UserType.ADMIN;
+                                        break;
+                                    case "BUYER":
+                                        userType = UserType.BUYER;
+                                        break;
+                                    case "SELLER":
+                                        userType = UserType.SELLER;
+                                        break;
+                                    default:
+                                        throw new IllegalStateException("Unexpected value: " + userTypeString);
+                                }
+                                //create the new user object and post it to livedata.
+                                User user = new User(uid, name, Objects.requireNonNull(mAuth.getCurrentUser()).getEmail(), userType);
+                                returnLiveData.postValue(user);
 
-                         }else{
-                             //post null so we can check for it later on error.
+                            } else {
+                                //post null so we can check for it later on error.
+                                returnLiveData.postValue(null);
+                            }
+                            //sometimes if the document is somehow deleted, it will return a list of size 0, causing this exception
+                        } catch (IndexOutOfBoundsException e) {
+                            //TODO show the user an error
                             returnLiveData.postValue(null);
-                         }
+                        }
                     }
                 });
         //cast to LiveData, we should never expose the mutable livedata
