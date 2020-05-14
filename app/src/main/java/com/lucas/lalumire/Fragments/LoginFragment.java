@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lucas.lalumire.Activities.LoginActivity;
-import com.lucas.lalumire.FragmentTransactions;
 import com.lucas.lalumire.R;
 import com.lucas.lalumire.Viewmodels.LoginViewModel;
 import com.lucas.lalumire.databinding.LoginFragmentBinding;

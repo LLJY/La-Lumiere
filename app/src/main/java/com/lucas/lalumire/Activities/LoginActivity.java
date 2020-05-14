@@ -3,7 +3,6 @@ package com.lucas.lalumire.Activities;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -12,7 +11,7 @@ import android.util.Log;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-import com.lucas.lalumire.FragmentTransactions;
+import com.lucas.lalumire.Fragments.FragmentTransactions;
 import com.lucas.lalumire.Fragments.LoginFragment;
 import com.lucas.lalumire.Fragments.SignUpFragment;
 import com.lucas.lalumire.Models.LoginActivityStatus;
