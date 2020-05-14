@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lucas.lalumire.Models.MenuItem;
@@ -20,6 +23,10 @@ import java.util.List;
 public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheetAdapter.ItemHolder> {
     //this cannot be null
     List<MenuItem> menuItems;
+    public MutableLiveData<Class> fragmentClassMLV = new MutableLiveData<Class>();
+    public LiveData<Class> getFragmentClassLiveData(){
+        return fragmentClassMLV;
+    }
     //constructor, to pass adapter the list
     public MenuBottomSheetAdapter(@NonNull List<MenuItem> menuItems){
         //assign constructor variables to class variables.
@@ -35,15 +42,23 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
 
     @Override
     public void onBindViewHolder(@NonNull MenuBottomSheetAdapter.ItemHolder holder, int position) {
-        MenuItem item = menuItems.get(position);
+        final MenuItem item = menuItems.get(position);
         holder.menuLabel.setText(item.itemName);
         //-1 means the image is unset
         if(item.itemPicture != -1) {
             holder.menuImage.setImageResource(item.itemPicture);
         }else{
             //if unset, it likely means it is the user profile picture, which is a url
+            //picasso will get the image asynchronously for us.
             Picasso.get().load(item.itemImageUrl).into(holder.menuImage);
         }
+        //post livedata if clicked so activity can handle the click.
+        holder.clickLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragmentClassMLV.postValue(item.itemFragment);
+            }
+        });
     }
 
     @Override
@@ -55,11 +70,13 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
         private BottomSheetRowLayoutBinding binding;
         private ImageView menuImage;
         private TextView menuLabel;
+        private ConstraintLayout clickLayout;
         public ItemHolder(BottomSheetRowLayoutBinding binding){
             //pass it the view from binding
             super(binding.getRoot());
             menuImage = binding.menuImage;
             menuLabel = binding.menuTitle;
+            clickLayout = binding.clickableLayout;
         }
 
         public ItemHolder(@NonNull View itemView) {

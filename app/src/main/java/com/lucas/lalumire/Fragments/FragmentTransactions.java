@@ -27,6 +27,18 @@ public class FragmentTransactions {
         }
         transaction.commit();
     }
+    public static void LaunchFragmentFade(@NonNull Fragment fragment, int container, @NonNull FragmentActivity context, boolean animation){
+        //get fragment manager
+        FragmentManager manager = context.getSupportFragmentManager();
+        //begin the transaction
+        FragmentTransaction transaction = manager.beginTransaction();
+        //replace the fragment into the container, container is just a layout which the fragment will reside in
+        transaction.replace(container, fragment);
+        if(animation){
+            transaction.setCustomAnimations(anim.fade_in, anim.fade_out, anim.fade_in, anim.fade_out );
+        }
+        transaction.commit();
+    }
 
     /**
      * Function that replaces fragment and adds it to the backstack
