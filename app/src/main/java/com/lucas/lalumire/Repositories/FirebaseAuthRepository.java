@@ -24,11 +24,12 @@ import java.util.Objects;
 public class FirebaseAuthRepository {
     private FirebaseAuth mAuth;
     private FirebaseFirestore mStore;
-    public FirebaseAuthRepository(){
+    public FirebaseAuthRepository() {
         mAuth = FirebaseAuth.getInstance();
         mStore = FirebaseFirestore.getInstance();
     }
-    public MutableLiveData<LoginActivityStatus> SignUp(String email, String password, final String name, final String username){
+
+    public MutableLiveData<LoginActivityStatus> SignUp(String email, String password, final String name, final String username) {
         final MutableLiveData<LoginActivityStatus> isSuccessfulLiveData = new MutableLiveData<>();
         //sign out if any user is signed in.
         mAuth.signOut();
@@ -37,7 +38,7 @@ public class FirebaseAuthRepository {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 //it is redundant to continue with any of this if login is unsuccesful.
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     //firebase automatically logs in when sign up is successful, so get current user
                     FirebaseUser user = mAuth.getCurrentUser();
                     //update the user profile to include username
@@ -62,9 +63,9 @@ public class FirebaseAuthRepository {
                                             Log.d("a", String.valueOf(task.isSuccessful()));
                                             //sign out so user has to sign in again.
                                             mAuth.signOut();
-                                            if(task.isSuccessful()) {
+                                            if (task.isSuccessful()) {
                                                 isSuccessfulLiveData.postValue(LoginActivityStatus.STATUS_SIGN_UP_SUCCESS);
-                                            }else{
+                                            } else {
                                                 isSuccessfulLiveData.postValue(LoginActivityStatus.STATUS_ERR);
                                             }
 
@@ -72,31 +73,19 @@ public class FirebaseAuthRepository {
                                     });
                         }
                     });
-                }else{
+                } else {
                     String errorCode = "";
                     LoginActivityStatus returnCode;
                     try {
-                        errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
-                    }catch (NullPointerException e){
+                        //throw the firebase exceptions so we can catch it and display a correct error to the user
+                        throw task.getException();
+                    }catch(FirebaseAuthWeakPasswordException e){
+                        returnCode = LoginActivityStatus.STATUS_WEAK_PASSWORD;
+                    }catch(FirebaseAuthUserCollisionException e){
+                        returnCode = LoginActivityStatus.STATUS_ACCOUNT_EXISTS;
+                    }catch(Exception e){
                         returnCode = LoginActivityStatus.STATUS_ERR;
                     }
-                    //post the value of isSuccessful to the observers
-                    switch (errorCode){
-                        case "ERROR_INVALID_CREDENTIAL":
-                            returnCode = LoginActivityStatus.STATUS_INVALID_CREDENTIALS;
-                            break;
-                        case "ERROR_USER_NOT_FOUND":
-                            returnCode = LoginActivityStatus.STATUS_INVALID_USER;
-                            break;
-                        case "ERROR_WRONG_PASSWORD":
-                            returnCode = LoginActivityStatus.STATUS_INVALID_CREDENTIALS;
-                            break;
-                        default:
-                            returnCode = LoginActivityStatus.STATUS_ERR;
-                            break;
-
-                    }
-                    //TODO handle exceptions individually and post correct error messages in activity
                     isSuccessfulLiveData.postValue(returnCode);
                 }
             }
@@ -105,37 +94,27 @@ public class FirebaseAuthRepository {
         //let ViewModel deal with the business logic when onComplete returns successful or not
         return isSuccessfulLiveData;
     }
-    public MutableLiveData<LoginActivityStatus> Login(String email, String password){
+
+    public MutableLiveData<LoginActivityStatus> Login(String email, String password) {
         final MutableLiveData<LoginActivityStatus> isSuccessfulLiveData = new MutableLiveData<>();
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 String errorCode = "";
-                LoginActivityStatus returnCode;
-                try {
-                    errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
-                }catch (NullPointerException e){
-                    returnCode = LoginActivityStatus.STATUS_ERR;
-                }
-                if(!task.isSuccessful()) {
-                    //post the value of isSuccessful to the observers
-                    switch (errorCode) {
-                        case "ERROR_INVALID_EMAIL":
-                            returnCode = LoginActivityStatus.STATUS_BAD_EMAIL;
-                            break;
-                        case "ERROR_CREDENTIAL_ALREADY_IN_USE":
-                            returnCode = LoginActivityStatus.STATUS_ACCOUNT_EXISTS;
-                            break;
-                        case "ERROR_WEAK_PASSWORD":
-                            returnCode = LoginActivityStatus.STATUS_WEAK_PASSWORD;
-                            break;
-                        case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
-                            returnCode = LoginActivityStatus.STATUS_ACCOUNT_EXISTS;
-                        default:
-                            returnCode = LoginActivityStatus.STATUS_ERR;
-                            break;
+                LoginActivityStatus returnCode = LoginActivityStatus.STATUS_LOADING;
+                if (!task.isSuccessful()) {
+                    try {
+                        //throw the firebase exceptions so we can catch it and display a correct error to the user
+                        throw task.getException();
+                    } catch (FirebaseAuthInvalidCredentialsException e) {
+                        returnCode = LoginActivityStatus.STATUS_INVALID_CREDENTIALS;
+                    } catch (FirebaseAuthInvalidUserException e) {
+                        returnCode = LoginActivityStatus.STATUS_INVALID_USER;
+                    } catch (Exception e) {
+                        returnCode = LoginActivityStatus.STATUS_ERR;
                     }
-                    }else{
+
+                } else {
                     returnCode = LoginActivityStatus.STATUS_LOGIN_SUCCESS;
                 }
                 isSuccessfulLiveData.postValue(returnCode);
