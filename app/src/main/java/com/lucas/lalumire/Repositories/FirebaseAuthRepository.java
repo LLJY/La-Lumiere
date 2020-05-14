@@ -1,5 +1,6 @@
 package com.lucas.lalumire.Repositories;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -41,9 +42,10 @@ public class FirebaseAuthRepository {
                 if (task.isSuccessful()) {
                     //firebase automatically logs in when sign up is successful, so get current user
                     FirebaseUser user = mAuth.getCurrentUser();
-                    //update the user profile to include username
+                    //update the user profile to include username and a stock photo for profile pic
                     UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                             .setDisplayName(username)
+                            .setPhotoUri(Uri.parse("https://www.clipartmax.com/png/full/171-1717870_prediction-clip-art.png"))
                             .build();
                     //null safety
                     assert user != null;

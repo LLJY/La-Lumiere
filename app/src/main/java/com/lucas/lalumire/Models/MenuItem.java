@@ -1,5 +1,7 @@
 package com.lucas.lalumire.Models;
 
+import android.net.Uri;
+
 import androidx.fragment.app.Fragment;
 
 //this is the object for menu items.
@@ -7,36 +9,20 @@ public class MenuItem {
 
     public Class itemFragment;
     public String itemName;
-    public int itemPicture;
+    //if it is -1 it is not set.
+    public int itemPicture = -1;
+    public Uri itemImageUrl;
+    public MenuItem(Class itemFragment, String itemName, Uri itemUrl) {
+        this.itemFragment = itemFragment;
+        this.itemName = itemName;
+        itemImageUrl = itemUrl;
 
+    }
     public MenuItem(Class itemFragment, String itemName, int itemPicture) {
         this.itemFragment = itemFragment;
         this.itemName = itemName;
         this.itemPicture = itemPicture;
-    }
 
-    public Class getItemFragment() {
-        return itemFragment;
-    }
-
-    public void setItemFragment(Class itemFragment) {
-        this.itemFragment = itemFragment;
-    }
-
-    public String getItemName() {
-        return itemName;
-    }
-
-    public void setItemName(String itemName) {
-        this.itemName = itemName;
-    }
-
-    public int getItemPicture() {
-        return itemPicture;
-    }
-
-    public void setItemPicture(int itemPicture) {
-        this.itemPicture = itemPicture;
     }
 
 }

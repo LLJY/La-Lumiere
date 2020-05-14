@@ -9,12 +9,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.lucas.lalumire.Adapters.MenuBottomSheetAdapter;
 import com.lucas.lalumire.Fragments.AboutFragment;
 import com.lucas.lalumire.Fragments.HomeFragment;
 import com.lucas.lalumire.Fragments.InboxFragment;
 import com.lucas.lalumire.Fragments.LikedItemsFragment;
 import com.lucas.lalumire.Fragments.ManageListingsFragment;
+import com.lucas.lalumire.Fragments.ProfileFragment;
 import com.lucas.lalumire.Fragments.SettingsFragment;
 import com.lucas.lalumire.Fragments.SubscribedCategoriesFragment;
 import com.lucas.lalumire.Fragments.TrackOrdersFragment;
@@ -25,6 +27,7 @@ import com.lucas.lalumire.Repositories.FirebaseAuthRepository;
 import com.lucas.lalumire.Repositories.FirestoreRepository;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /** This is called the MainViewModel as it should contain the information that is shared between all fragments.
  * this should be the largest block of Business logic through out the entire app and everything should reside here.
@@ -50,14 +53,16 @@ public class MainViewModel extends AndroidViewModel {
             @Override
             public void onChanged(User user) {
                 ArrayList<MenuItem> menuItems = new ArrayList<>();
+                //add items based off the order of items in the recyclerview
+                menuItems.add(new MenuItem(ProfileFragment.class, user.getName(), Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getPhotoUrl()));
                 switch(user.userType){
                     case ADMIN:
                         menuItems.add(new MenuItem(ManageListingsFragment.class, "Manage Listings", R.drawable.ic_edit_black_24dp));
                         break;
                     case BUYER:
-                        menuItems.add(new MenuItem(ManageListingsFragment.class, "Manage Listings", R.drawable.ic_edit_black_24dp));
                         break;
                     case SELLER:
+                        menuItems.add(new MenuItem(ManageListingsFragment.class, "Manage Listings", R.drawable.ic_edit_black_24dp));
                         break;
                 }
                 menuItems.add(new MenuItem(TrackOrdersFragment.class, "Track Orders", R.drawable.ic_near_me_black_24dp));

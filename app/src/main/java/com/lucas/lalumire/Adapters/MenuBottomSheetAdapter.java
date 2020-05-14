@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lucas.lalumire.Models.MenuItem;
 import com.lucas.lalumire.databinding.BottomSheetRowLayoutBinding;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,7 +37,13 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
     public void onBindViewHolder(@NonNull MenuBottomSheetAdapter.ItemHolder holder, int position) {
         MenuItem item = menuItems.get(position);
         holder.menuLabel.setText(item.itemName);
-        holder.menuImage.setImageResource(item.itemPicture);
+        //-1 means the image is unset
+        if(item.itemPicture != -1) {
+            holder.menuImage.setImageResource(item.itemPicture);
+        }else{
+            //if unset, it likely means it is the user profile picture, which is a url
+            Picasso.get().load(item.itemImageUrl).into(holder.menuImage);
+        }
     }
 
     @Override
