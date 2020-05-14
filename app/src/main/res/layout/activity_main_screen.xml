@@ -12,5 +12,7 @@
         android:layout_height="match_parent"
         android:id="@+id/main_fragment_holder">
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <include layout="@layout/menu_bottom_sheet"/>
+    <include
+        android:id="@+id/bottom_sheet"
+        layout="@layout/menu_bottom_sheet"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

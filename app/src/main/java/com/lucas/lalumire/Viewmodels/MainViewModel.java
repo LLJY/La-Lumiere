@@ -9,9 +9,22 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
+import com.lucas.lalumire.Adapters.MenuBottomSheetAdapter;
+import com.lucas.lalumire.Fragments.AboutFragment;
+import com.lucas.lalumire.Fragments.HomeFragment;
+import com.lucas.lalumire.Fragments.InboxFragment;
+import com.lucas.lalumire.Fragments.LikedItemsFragment;
+import com.lucas.lalumire.Fragments.ManageListingsFragment;
+import com.lucas.lalumire.Fragments.SettingsFragment;
+import com.lucas.lalumire.Fragments.SubscribedCategoriesFragment;
+import com.lucas.lalumire.Fragments.TrackOrdersFragment;
+import com.lucas.lalumire.Models.MenuItem;
 import com.lucas.lalumire.Models.User;
+import com.lucas.lalumire.R;
 import com.lucas.lalumire.Repositories.FirebaseAuthRepository;
 import com.lucas.lalumire.Repositories.FirestoreRepository;
+
+import java.util.ArrayList;
 
 /** This is called the MainViewModel as it should contain the information that is shared between all fragments.
  * this should be the largest block of Business logic through out the entire app and everything should reside here.
@@ -22,6 +35,8 @@ public class MainViewModel extends AndroidViewModel {
     private FirestoreRepository firestoreRepository;
     //logged in user's details
     private MutableLiveData<User> mutableLoggedInUser = new MutableLiveData<>();
+    //we will initialize this once we get our User
+    public MenuBottomSheetAdapter menuBottomSheetAdapter;
     //getter method to provide LiveData version of mutableLoggedInUser
     public LiveData getUserLiveData(){
         return this.mutableLoggedInUser;
@@ -30,24 +45,33 @@ public class MainViewModel extends AndroidViewModel {
         super(application);
         this.firestoreRepository = firestoreRepository;
         //automatically get the loggedInUser
-        firestoreRepository.getUserInfo().observeForever(new Observer<User>() {
+        final LiveData<User> userObserveOnce = firestoreRepository.getUserInfo();
+        userObserveOnce.observeForever(new Observer<User>() {
             @Override
             public void onChanged(User user) {
+                ArrayList<MenuItem> menuItems = new ArrayList<>();
+                switch(user.userType){
+                    case ADMIN:
+                        menuItems.add(new MenuItem(ManageListingsFragment.class, "Manage Listings", R.drawable.ic_edit_black_24dp));
+                        break;
+                    case BUYER:
+                        menuItems.add(new MenuItem(ManageListingsFragment.class, "Manage Listings", R.drawable.ic_edit_black_24dp));
+                        break;
+                    case SELLER:
+                        break;
+                }
+                menuItems.add(new MenuItem(TrackOrdersFragment.class, "Track Orders", R.drawable.ic_near_me_black_24dp));
+                menuItems.add(new MenuItem(HomeFragment.class, "Home", R.drawable.ic_home_black_24dp));
+                menuItems.add(new MenuItem(InboxFragment.class, "Inbox", R.drawable.ic_inbox_black_24dp));
+                menuItems.add(new MenuItem(LikedItemsFragment.class, "Liked Items", R.drawable.ic_favorite_black_24dp));
+                menuItems.add(new MenuItem(SubscribedCategoriesFragment.class, "Subscribed Categories", R.drawable.ic_format_list_bulleted_black_24dp));
+                menuItems.add(new MenuItem(SettingsFragment.class, "Settings", R.drawable.ic_settings_black_24dp));
+                menuItems.add(new MenuItem(AboutFragment.class, "About", R.drawable.ic_info_black_24dp));
+                menuBottomSheetAdapter = new MenuBottomSheetAdapter(menuItems);
                 //post the value to activity
                 mutableLoggedInUser.postValue(user);
-            }
-        });
-    }
-    public void getUserInfo(){
-        //post true when done so activity can fetch the data from viewmodel.
-        final LiveData<User> observable = firestoreRepository.getUserInfo();
-        observable.observeForever(new Observer<User>() {
-            @Override
-            public void onChanged(User a) {
-                //post value to observer in mainactivity
-                mutableLoggedInUser.postValue(a);
-                //we don't need this observer anymore, remove it.
-                observable.removeObserver(this);
+                //we only need to observe once
+                userObserveOnce.removeObserver(this);
 
             }
         });
