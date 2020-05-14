@@ -123,6 +123,12 @@ public class FirebaseAuthRepository {
         return isSuccessfulLiveData;
 
     }
+    public Boolean isLoggedIn(){
+        if(mAuth.getCurrentUser() != null){
+            return true;
+        }
+        return false;
+    }
 //    public User getCurrentUser(){
 //
 //    }

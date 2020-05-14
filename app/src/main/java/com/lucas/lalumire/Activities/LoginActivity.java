@@ -37,13 +37,18 @@ public class LoginActivity extends AppCompatActivity {
         /* Typically I should leave the bulk of this "Business Logic" in the ViewModel, however ViewModel is NOT context aware
          * which is by design. Hence, the initialization of fragments shall remain in the activity.
          */
-        if(!loginViewModel.getValue().isSignUp) {
-            FragmentTransactions.LaunchFragment(new LoginFragment(), R.id.login_fragment_container, this, false);
+        //check if user is logged in, if they are logged in, open up MainActivity.
+        if(!loginViewModel.getValue().isLoggedIn()) {
+            if (!loginViewModel.getValue().isSignUp) {
+                FragmentTransactions.LaunchFragment(new LoginFragment(), R.id.login_fragment_container, this, false);
+            } else {
+                //the back stack should be cleared and fragments restarted when the activity restarts as the fragments are no longer available.
+                LoginFragment loginFragment = new LoginFragment();
+                FragmentTransactions.LaunchFragment(loginFragment, R.id.login_fragment_container, this, false);
+                FragmentTransactions.ReplaceFragment(new SignUpFragment(), R.id.login_fragment_container, this, loginFragment.getClass().getName(), true);
+            }
         }else{
-            //the back stack should be cleared and fragments restarted when the activity restarts as the fragments are no longer available.
-            LoginFragment loginFragment = new LoginFragment();
-            FragmentTransactions.LaunchFragment(loginFragment, R.id.login_fragment_container, this, false);
-            FragmentTransactions.ReplaceFragment(new SignUpFragment(), R.id.login_fragment_container, this,loginFragment.getClass().getName(), true);
+            startLoginActivity();
         }
         loginViewModel.getValue().getLiveData().observe(this, new Observer() {
             @Override

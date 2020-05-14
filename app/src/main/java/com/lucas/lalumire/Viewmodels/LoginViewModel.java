@@ -92,8 +92,8 @@ public class LoginViewModel extends ViewModel {
                             @Override
                             public void onChanged(LoginActivityStatus a) {
                                 //notify the observers in activity
-                               mutableSuccess.postValue(a);
-                               //we do not need the observer anymore
+                                mutableSuccess.postValue(a);
+                                //we do not need the observer anymore
                                 result.removeObserver(this);
                             }
                         });
@@ -102,7 +102,11 @@ public class LoginViewModel extends ViewModel {
             }
         }).start();
 
+    }
 
+    public Boolean isLoggedIn(){
+        //check repository if user is logged in
+        return firebaseAuthRepository.isLoggedIn();
     }
     /** When the Activity is restarted livedata erroneously sends an update to the observers.
      * This is crucial as the activity listens for updates to call showSnackError()
