@@ -36,8 +36,8 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
         notifyDataSetChanged();
 
     }
-    private MutableLiveData<Class> fragmentClassMLV = new MutableLiveData<Class>();
-    public LiveData<Class> getFragmentClassLiveData(){
+    private MutableLiveData<MenuItem> fragmentClassMLV = new MutableLiveData<>();
+    public LiveData<MenuItem> getFragmentClassLiveData(){
         return fragmentClassMLV;
     }
     //constructor, to pass adapter the list
@@ -69,7 +69,7 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
         holder.clickLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fragmentClassMLV.postValue(item.itemFragment);
+                fragmentClassMLV.postValue(item);
                 selectItem(position);
             }
         });

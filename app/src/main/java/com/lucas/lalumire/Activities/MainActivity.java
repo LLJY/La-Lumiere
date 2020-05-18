@@ -14,6 +14,7 @@ import android.view.View;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.lucas.lalumire.Fragments.FragmentTransactions;
 import com.lucas.lalumire.Fragments.HomeFragment;
+import com.lucas.lalumire.Models.MenuItem;
 import com.lucas.lalumire.Models.User;
 import com.lucas.lalumire.Models.UserType;
 import com.lucas.lalumire.Viewmodels.MainViewModel;
@@ -59,15 +60,17 @@ public class MainActivity extends AppCompatActivity {
                     binding.bottomSheet.menuRecycler.setAdapter(mainViewModelLazy.getValue().menuBottomSheetAdapter);
                     binding.bottomSheet.menuRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
                     //observe for clicks
-                    mainViewModelLazy.getValue().menuBottomSheetAdapter.getFragmentClassLiveData().observe(MainActivity.this, new Observer<Class>() {
+                    mainViewModelLazy.getValue().menuBottomSheetAdapter.getFragmentClassLiveData().observe(MainActivity.this, new Observer<MenuItem>() {
                         @Override
-                        public void onChanged(Class aClass) {
-                            if(aClass != null){
+                        public void onChanged(MenuItem item) {
+                            if(item != null){
                                 try {
                                     //collapse the bottomsheet
                                     BottomSheetBehavior.from(binding.bottomSheet.bottomSheet).setState(BottomSheetBehavior.STATE_COLLAPSED);
                                     //start the fragment
-                                    FragmentTransactions.LaunchFragmentFade((Fragment) aClass.newInstance(), R.id.main_fragment_holder, MainActivity.this,true);
+                                    FragmentTransactions.LaunchFragmentFade((Fragment) item.itemFragment.newInstance(), R.id.main_fragment_holder, MainActivity.this,true);
+                                    //set the name of the active fragment
+                                    binding.bottomSheet.menuLabel.setText(item.itemName);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
