@@ -26,17 +26,17 @@ import java.util.List;
 //this is the adapter AND viewholder for the menu
 public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheetAdapter.ItemHolder> {
     //this cannot be null
-    List<MenuItem> menuItems;
-    int selectedIndex;
-    String accentColor = "#4fc3f7";
-    String defaultTextColor = "#000000";
-    public void selectItem(int position){
+    private List<MenuItem> menuItems;
+    private int selectedIndex;
+    private String accentColor = "#4fc3f7";
+    private String defaultTextColor = "#000000";
+    private void selectItem(int position){
         selectedIndex = position;
         //update all the fields, bad practice but our recyclerview is pretty small so it should be fine.
         notifyDataSetChanged();
 
     }
-    public MutableLiveData<Class> fragmentClassMLV = new MutableLiveData<Class>();
+    private MutableLiveData<Class> fragmentClassMLV = new MutableLiveData<Class>();
     public LiveData<Class> getFragmentClassLiveData(){
         return fragmentClassMLV;
     }
