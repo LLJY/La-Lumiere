@@ -76,8 +76,10 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
         if(selectedIndex == position){
             holder.clickLayout.setBackgroundColor(Color.parseColor(accentColor));
             holder.clickLayout.setAlpha(0.5f);
+            holder.menuLabel.setAlpha(1.0f);
         }else{
             holder.clickLayout.setBackgroundColor(Color.WHITE);
+            holder.clickLayout.setAlpha(1.0f);
         }
     }
 
