@@ -1,6 +1,8 @@
 package com.lucas.lalumire.Adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.R.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +11,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lucas.lalumire.Models.MenuItem;
+import com.lucas.lalumire.R;
 import com.lucas.lalumire.databinding.BottomSheetRowLayoutBinding;
 import com.squareup.picasso.Picasso;
 
@@ -23,6 +27,15 @@ import java.util.List;
 public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheetAdapter.ItemHolder> {
     //this cannot be null
     List<MenuItem> menuItems;
+    int selectedIndex;
+    String accentColor = "#4fc3f7";
+    String defaultTextColor = "#000000";
+    public void selectItem(int position){
+        selectedIndex = position;
+        //update all the fields, bad practice but our recyclerview is pretty small so it should be fine.
+        notifyDataSetChanged();
+
+    }
     public MutableLiveData<Class> fragmentClassMLV = new MutableLiveData<Class>();
     public LiveData<Class> getFragmentClassLiveData(){
         return fragmentClassMLV;
@@ -41,7 +54,7 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MenuBottomSheetAdapter.ItemHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MenuBottomSheetAdapter.ItemHolder holder, final int position) {
         final MenuItem item = menuItems.get(position);
         holder.menuLabel.setText(item.itemName);
         //-1 means the image is unset
@@ -57,8 +70,15 @@ public class MenuBottomSheetAdapter extends RecyclerView.Adapter<MenuBottomSheet
             @Override
             public void onClick(View v) {
                 fragmentClassMLV.postValue(item.itemFragment);
+                selectItem(position);
             }
         });
+        if(selectedIndex == position){
+            holder.clickLayout.setBackgroundColor(Color.parseColor(accentColor));
+            holder.clickLayout.setAlpha(0.5f);
+        }else{
+            holder.clickLayout.setBackgroundColor(Color.WHITE);
+        }
     }
 
     @Override

@@ -39,12 +39,15 @@ public class MainActivity extends AppCompatActivity {
         pd = ProgressDialog.show(this, "Loading", "Please wait...");
         //start the home fragment
         LiveData observeOnce = mainViewModelLazy.getValue().getUserLiveData();
-        binding.bottomSheet.menuButton.setOnClickListener(new View.OnClickListener() {
+        View.OnClickListener expandBottomSheetOnClick = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //expand when menu is clicked
                 BottomSheetBehavior.from(binding.bottomSheet.bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
             }
-        });
+        };
+        binding.bottomSheet.menuButton.setOnClickListener(expandBottomSheetOnClick);
+        binding.bottomSheet.menuBar.setOnClickListener(expandBottomSheetOnClick);
         observeOnce.observe(this, new Observer() {
             @Override
             public void onChanged(Object o) {
