@@ -13,6 +13,8 @@ import com.lucas.lalumire.Models.Item;
 import com.lucas.lalumire.databinding.SmallItemCardBinding;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.SmallCardViewHolder> {
@@ -35,7 +37,8 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         holder.itemNameText.setText(item.Title);
         Picasso.get().load(item.sellerImageURL).into(holder.sellerProfileImage);
         //it will look like "Likes 14"
-        holder.likedText.setText("Likes"+String.valueOf(item.Likes));
+        holder.likedText.setText(String.valueOf(item.Likes) +" Likes");
+        holder.sellerName.setText(item.sellerName);
     }
 
     @Override
@@ -47,6 +50,7 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         ImageView itemImage;
         TextView itemNameText;
         TextView likedText;
+        TextView sellerName;
         ImageView sellerProfileImage;
         ImageView likeImage;
 
@@ -56,6 +60,7 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
             itemImage = binding.itemImage;
             itemNameText = binding.itemNameText;
             likedText = binding.likesAmountText;
+            sellerName = binding.itemProfileNameText;
             sellerProfileImage = binding.itemProfileImage;
             likeImage = binding.likeImage;
         }

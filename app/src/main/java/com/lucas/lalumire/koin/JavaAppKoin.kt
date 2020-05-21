@@ -24,7 +24,7 @@ val mainViewModelModule : Module = module{
     single{ MainViewModel(Application(), FirestoreRepository(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance())) }
 }
 val homeViewModelModule : Module = module {
-    single{ HomeViewModel() }
+    single{ HomeViewModel(FirestoreRepository(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance())) }
 }
 
 fun start(applicationComponent: ApplicationComponent){

@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -109,11 +110,11 @@ public class FirestoreRepository{
         Request request = new Request.Builder()
                 .url(url)
                 .build();
+        ArrayList<Item> listOfItems = new ArrayList<>();
         try{
             //get this synchronously, we will do it asynchronously in ViewModel
             Response response = client.newCall(request).execute();
-            JSONArray jsonArray = new JSONArray(response.toString());
-            ArrayList<Item> listOfItems = new ArrayList<>();
+            JSONArray jsonArray = new JSONArray(response.body().string());
             for(int i =0; i<jsonArray.length(); i++){
                 ArrayList<String> itemImages = new ArrayList<>();
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -123,15 +124,14 @@ public class FirestoreRepository{
                     String imageURL = imagesArray.getString(l);
                     itemImages.add(imageURL);
                 }
-                Item item = new Item(jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"));
+                Item item = new Item(jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"));
                 //add the item to the list.
                 listOfItems.add(item);
             }
-            return listOfItems;
         }catch(Exception e){
-
+            e.printStackTrace();
         }
+        return listOfItems;
 
-        return null;
     }
 }
