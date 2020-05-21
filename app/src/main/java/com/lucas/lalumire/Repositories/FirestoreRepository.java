@@ -1,5 +1,6 @@
 package com.lucas.lalumire.Repositories;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -15,13 +16,23 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.lucas.lalumire.Models.Item;
 import com.lucas.lalumire.Models.User;
 import com.lucas.lalumire.Models.UserType;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 import kotlin.Lazy;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import static org.koin.java.KoinJavaComponent.inject;
 
@@ -85,5 +96,42 @@ public class FirestoreRepository{
                 });
         //cast to LiveData, we should never expose the mutable livedata
         return (LiveData)returnLiveData;
+    }
+
+    /**
+     * Get the list of items from firebase cloud store MUST BE RUN ASYNCHRONOUSLY!
+     * @return
+     */
+    public List<Item> getItems(){
+
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getUserItems";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        try{
+            //get this synchronously, we will do it asynchronously in ViewModel
+            Response response = client.newCall(request).execute();
+            JSONArray jsonArray = new JSONArray(response.toString());
+            ArrayList<Item> listOfItems = new ArrayList<>();
+            for(int i =0; i<jsonArray.length(); i++){
+                ArrayList<String> itemImages = new ArrayList<>();
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONArray imagesArray = jsonObject.getJSONArray("Images");
+                //parse the images, i is taken, so use l
+                for(int l=0; l<imagesArray.length(); l++){
+                    String imageURL = imagesArray.getString(l);
+                    itemImages.add(imageURL);
+                }
+                Item item = new Item(jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"));
+                //add the item to the list.
+                listOfItems.add(item);
+            }
+            return listOfItems;
+        }catch(Exception e){
+
+        }
+
+        return null;
     }
 }
