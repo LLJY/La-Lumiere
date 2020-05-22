@@ -12,21 +12,21 @@ import java.util.logging.Handler;
 
 public class HomeViewModel extends ViewModel {
     //gets the hot items
+    MutableLiveData<List<Item>> listMutableItems = new MutableLiveData<>();
     FirestoreRepository firestoreRepository;
     public HomeViewModel(FirestoreRepository firestoreRepository){
         this.firestoreRepository = firestoreRepository;
     }
     public LiveData<List<Item>> getHotItems(){
-        final MutableLiveData<List<Item>> mutableItems = new MutableLiveData<>();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 //let fragment know that the value is ready
-                mutableItems.postValue(firestoreRepository.getHottestItems());
+                listMutableItems.postValue(firestoreRepository.getHottestItems());
             }
         }).start();
         //return so we can observe it for changes in fragment
-        return mutableItems;
+        return listMutableItems;
     }
 
 }
