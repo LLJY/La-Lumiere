@@ -30,7 +30,7 @@ android {
 dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.shobhitpuri.custombuttons:google-signin:1.1.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha06'
+    implementation 'com.google.android.material:material:1.1.0'
     def koin_version = '2.1.5'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // Koin AndroidX Scope features
