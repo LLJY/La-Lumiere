@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Item {
+    public String ListingID;
     public String Title;
     public String sellerName;
     public String sellerUID;
@@ -21,8 +22,10 @@ public class Item {
     public int Stock;
     public ArrayList<String> images;
     public boolean isAdvert;
+    public boolean isLiked;
 
-    public Item(String title, String sellerName, String sellerUID, Uri sellerImageURL, int likes, LocalDateTime listedTime, float rating, String description, String transactionInformation, String procurementInformation, String category, int stock, ArrayList<String> images, boolean isAdvert) {
+    public Item(String listingID, String title, String sellerName, String sellerUID, Uri sellerImageURL, int likes, LocalDateTime listedTime, float rating, String description, String transactionInformation, String procurementInformation, String category, int stock, ArrayList<String> images, boolean isAdvert, boolean isLiked) {
+        ListingID = listingID;
         Title = title;
         this.sellerName = sellerName;
         this.sellerUID = sellerUID;
@@ -37,6 +40,15 @@ public class Item {
         Stock = stock;
         this.images = images;
         this.isAdvert = isAdvert;
+        this.isLiked = isLiked;
+    }
+
+    public String getListingID() {
+        return ListingID;
+    }
+
+    public void setListingID(String listingID) {
+        ListingID = listingID;
     }
 
     public String getTitle() {
@@ -149,5 +161,13 @@ public class Item {
 
     public void setAdvert(boolean advert) {
         isAdvert = advert;
+    }
+
+    public boolean isLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 }

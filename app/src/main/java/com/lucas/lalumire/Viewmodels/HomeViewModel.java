@@ -22,7 +22,7 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void run() {
                 //let fragment know that the value is ready
-                mutableItems.postValue(firestoreRepository.getItems());
+                mutableItems.postValue(firestoreRepository.getHottestItems());
             }
         }).start();
         //return so we can observe it for changes in fragment

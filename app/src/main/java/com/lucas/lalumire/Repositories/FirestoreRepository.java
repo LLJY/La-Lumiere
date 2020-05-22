@@ -32,7 +32,9 @@ import java.util.Objects;
 
 import kotlin.Lazy;
 import okhttp3.OkHttpClient;
+import okhttp3.FormBody;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static org.koin.java.KoinJavaComponent.inject;
@@ -103,12 +105,15 @@ public class FirestoreRepository{
      * Get the list of items from firebase cloud store MUST BE RUN ASYNCHRONOUSLY!
      * @return
      */
-    public List<Item> getItems(){
-
-        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getUserItems";
+    public List<Item> getHottestItems(){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getHottestItems";
         OkHttpClient client = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .build();
         Request request = new Request.Builder()
                 .url(url)
+                .post(formBody)
                 .build();
         ArrayList<Item> listOfItems = new ArrayList<>();
         try{
@@ -124,7 +129,7 @@ public class FirestoreRepository{
                     String imageURL = imagesArray.getString(l);
                     itemImages.add(imageURL);
                 }
-                Item item = new Item(jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"));
+                Item item = new Item(jsonObject.getString("ListingID"), jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"), jsonObject.getBoolean("userLiked"));
                 //add the item to the list.
                 listOfItems.add(item);
             }

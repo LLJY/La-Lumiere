@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lucas.lalumire.Models.Item;
+import com.lucas.lalumire.R;
 import com.lucas.lalumire.databinding.SmallItemCardBinding;
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +40,9 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         //it will look like "Likes 14"
         holder.likedText.setText(String.valueOf(item.Likes) +" Likes");
         holder.sellerName.setText(item.sellerName);
+        if(item.isLiked){
+            holder.likeImage.setImageResource(R.drawable.ic_favorite_red_24dp);
+        }
     }
 
     @Override
