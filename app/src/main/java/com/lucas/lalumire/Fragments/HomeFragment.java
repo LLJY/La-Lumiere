@@ -128,7 +128,7 @@ public class HomeFragment extends Fragment {
             });
         }else{
             //if the adapter is not null, use it.
-            binding.followItems.setAdapter(homeViewModelLazy.getValue().hotItemsAdapter);
+            binding.followItems.setAdapter(homeViewModelLazy.getValue().followingItemsAdapter);
             //manually set layout manager in case we wanna do anything special, this doesn't take very long anyway
             binding.followItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         }
