@@ -139,4 +139,26 @@ public class FirestoreRepository{
         return listOfItems;
 
     }
+
+    public List<String> getCategories(){
+        //get from firebase cloud
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getCategories";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        ArrayList<String> categoryList = new ArrayList<>();
+        try {
+            Response response = client.newCall(request).execute();
+            JSONArray responseArray = new JSONArray(response.body().string());
+            for(int i=0; i<responseArray.length(); i++){
+                //get the string and add it to the array
+                categoryList.add(responseArray.getString(i));
+            }
+        }catch(Exception e){
+            //just print the error for now, proper error handling will be implemented later.
+            e.printStackTrace();
+        }
+        return categoryList;
+    }
 }

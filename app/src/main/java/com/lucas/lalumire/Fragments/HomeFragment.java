@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
@@ -40,6 +41,27 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        //if user does not exist yet, observe and wait.
+        if (mainViewModel.getValue().getUserLiveData().getValue() == null) {
+            mainViewModel.getValue().getUserLiveData().observe(getViewLifecycleOwner(), new Observer() {
+                @Override
+                public void onChanged(Object o) {
+                    if (o != null) {
+                        User it = (User) o;
+                        //after user has loaded, get the items and display it
+                        loadUI();
+                    }
+                }
+            });
+        }else{
+            //this happens when the fragment has reopened or somehow the api was faster
+            loadUI();
+        }
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         //setup viewbinding
@@ -50,30 +72,45 @@ public class HomeFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (mainViewModel.getValue().getUserLiveData().getValue() == null) {
-            mainViewModel.getValue().getUserLiveData().observe(getViewLifecycleOwner(), new Observer() {
+
+    }
+    private void loadUI(){
+        if(homeViewModelLazy.getValue().smallItemAdapter == null) {
+            final LiveData<List<Item>> ItemsObservable = homeViewModelLazy.getValue().getHotItems();
+            ItemsObservable.observeForever(new Observer<List<Item>>() {
                 @Override
-                public void onChanged(Object o) {
-                    if (o != null) {
-                        User it = (User) o;
-                        //after user has loaded, get the items and display it
-                        final LiveData<List<Item>> ItemsObservable = homeViewModelLazy.getValue().getHotItems();
-                        ItemsObservable.observeForever(new Observer<List<Item>>() {
-                            @Override
-                            public void onChanged(List<Item> items) {
-                                if (items != null) {
-                                    Log.d("hehe", String.valueOf(items.size()));
-                                    binding.hotItems.setAdapter(new SmallItemAdapter(items));
-                                    binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-                                    //we do not need to observe anymore
-                                    ItemsObservable.removeObserver(this);
-                                }
-                            }
-                        });
+                public void onChanged(List<Item> items) {
+                    if (items != null) {
+                        Log.d("hehe", String.valueOf(items.size()));
+                        //set the already created adapter
+                        binding.hotItems.setAdapter(homeViewModelLazy.getValue().smallItemAdapter);
+                        binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                        //we do not need to observe anymore
+                        ItemsObservable.removeObserver(this);
                     }
                 }
             });
+        }else{
+            //if the adapter is not null, use it.
+            binding.hotItems.setAdapter(homeViewModelLazy.getValue().smallItemAdapter);
+            //manually set layout manager in case we wanna do anything special, this doesn't take very long anyway
+            binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        }
+        if(homeViewModelLazy.getValue().categoryAdapter == null){
+            final LiveData<List<String>> itemsObservable = homeViewModelLazy.getValue().getCategories();
+            itemsObservable.observeForever(new Observer<List<String>>() {
+                @Override
+                public void onChanged(List<String> strings) {
+                    //when the value is posted, viewmodel would have automatically created an adapter for us
+                    binding.categoryItems.setAdapter(homeViewModelLazy.getValue().categoryAdapter);
+                    binding.categoryItems.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
+                }
+            });
+        }else{
+            binding.categoryItems.setAdapter(homeViewModelLazy.getValue().categoryAdapter);
+            binding.categoryItems.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
         }
     }
+
 
 }
