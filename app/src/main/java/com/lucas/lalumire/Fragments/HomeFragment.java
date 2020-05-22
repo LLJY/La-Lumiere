@@ -75,7 +75,7 @@ public class HomeFragment extends Fragment {
 
     }
     private void loadUI(){
-        if(homeViewModelLazy.getValue().smallItemAdapter == null) {
+        if(homeViewModelLazy.getValue().hotItemsAdapter == null) {
             final LiveData<List<Item>> ItemsObservable = homeViewModelLazy.getValue().getHotItems();
             ItemsObservable.observeForever(new Observer<List<Item>>() {
                 @Override
@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
                     if (items != null) {
                         Log.d("hehe", String.valueOf(items.size()));
                         //set the already created adapter
-                        binding.hotItems.setAdapter(homeViewModelLazy.getValue().smallItemAdapter);
+                        binding.hotItems.setAdapter(homeViewModelLazy.getValue().hotItemsAdapter);
                         binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                         //we do not need to observe anymore
                         ItemsObservable.removeObserver(this);
@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
             });
         }else{
             //if the adapter is not null, use it.
-            binding.hotItems.setAdapter(homeViewModelLazy.getValue().smallItemAdapter);
+            binding.hotItems.setAdapter(homeViewModelLazy.getValue().hotItemsAdapter);
             //manually set layout manager in case we wanna do anything special, this doesn't take very long anyway
             binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         }
@@ -109,6 +109,28 @@ public class HomeFragment extends Fragment {
         }else{
             binding.categoryItems.setAdapter(homeViewModelLazy.getValue().categoryAdapter);
             binding.categoryItems.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
+        }
+        //get followed seller's items
+        if(homeViewModelLazy.getValue().followingItemsAdapter == null) {
+            final LiveData<List<Item>> ItemsObservable = homeViewModelLazy.getValue().getFollowingItems();
+            ItemsObservable.observeForever(new Observer<List<Item>>() {
+                @Override
+                public void onChanged(List<Item> items) {
+                    if (items != null) {
+                        Log.d("hehe", String.valueOf(items.size()));
+                        //set the already created adapter
+                        binding.followItems.setAdapter(homeViewModelLazy.getValue().followingItemsAdapter);
+                        binding.followItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                        //we do not need to observe anymore
+                        ItemsObservable.removeObserver(this);
+                    }
+                }
+            });
+        }else{
+            //if the adapter is not null, use it.
+            binding.followItems.setAdapter(homeViewModelLazy.getValue().hotItemsAdapter);
+            //manually set layout manager in case we wanna do anything special, this doesn't take very long anyway
+            binding.followItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         }
     }
 

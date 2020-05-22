@@ -139,6 +139,45 @@ public class FirestoreRepository{
         return listOfItems;
 
     }
+    /**
+     * Get the list of items from firebase cloud store MUST BE RUN ASYNCHRONOUSLY!
+     * specifically the list of items from the sellers that the user follows
+     * @return
+     */
+    public List<Item> getFollowingItems(){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getItemByFollowed";
+        OkHttpClient client = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        ArrayList<Item> listOfItems = new ArrayList<>();
+        try{
+            //get this synchronously, we will do it asynchronously in ViewModel
+            Response response = client.newCall(request).execute();
+            JSONArray jsonArray = new JSONArray(response.body().string());
+            for(int i =0; i<jsonArray.length(); i++){
+                ArrayList<String> itemImages = new ArrayList<>();
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONArray imagesArray = jsonObject.getJSONArray("Images");
+                //parse the images, i is taken, so use l
+                for(int l=0; l<imagesArray.length(); l++){
+                    String imageURL = imagesArray.getString(l);
+                    itemImages.add(imageURL);
+                }
+                Item item = new Item(jsonObject.getString("ListingID"), jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"), jsonObject.getBoolean("userLiked"));
+                //add the item to the list.
+                listOfItems.add(item);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return listOfItems;
+
+    }
 
     public List<String> getCategories(){
         //get from firebase cloud
