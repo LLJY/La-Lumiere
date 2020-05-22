@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
                                     //collapse the bottomsheet
                                     BottomSheetBehavior.from(binding.bottomSheet.bottomSheet).setState(BottomSheetBehavior.STATE_COLLAPSED);
                                     //start the fragment
-                                    FragmentTransactions.LaunchFragmentFade((Fragment) item.itemFragment.newInstance(), R.id.main_fragment_holder, MainActivity.this,true);
+                                    FragmentTransactions.LaunchFragment((Fragment) item.itemFragment.newInstance(), R.id.main_fragment_holder, MainActivity.this,true);
                                     //set the name of the active fragment
                                     binding.bottomSheet.menuLabel.setText(item.itemName);
                                 } catch (Exception e) {

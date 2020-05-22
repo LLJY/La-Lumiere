@@ -37,8 +37,8 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         Picasso.get().load(item.images.get(0)).into(holder.itemImage);
         holder.itemNameText.setText(item.Title);
         Picasso.get().load(item.sellerImageURL).into(holder.sellerProfileImage);
-        //it will look like "Likes 14"
-        holder.likedText.setText(String.valueOf(item.Likes) +" Likes");
+
+        holder.likedText.setText(String.valueOf(item.Likes));
         holder.sellerName.setText(item.sellerName);
         if(item.isLiked){
             holder.likeImage.setImageResource(R.drawable.ic_favorite_red_24dp);

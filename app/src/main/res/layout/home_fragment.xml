@@ -34,7 +34,7 @@
         android:id="@+id/hot_items"
         android:layout_width="match_parent"
         app:layout_constraintTop_toBottomOf="@id/all_hot_buttons"
-        android:layout_height="220dp"/>
+        android:layout_height="230dp"/>
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/explore_text"
         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/category_items"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="110dp"
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/explore_text"/>
     <com.google.android.material.textview.MaterialTextView
@@ -80,7 +80,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/follow_items"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="230dp"
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/follow_text"/>
     <com.google.android.material.textview.MaterialTextView
@@ -110,7 +110,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/interest_items"
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="230dp"
         android:layout_marginTop="4dp"
         app:layout_constraintTop_toBottomOf="@id/interest_text"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
