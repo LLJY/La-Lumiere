@@ -118,6 +118,7 @@ public class FirestoreRepository{
         List<Item> listOfItems = new ArrayList<>();
         try{
             Response response = client.newCall(request).execute();
+            //convert the response to a list of items
             listOfItems = processItemJson(response.body().string());
         }catch(Exception e){
             e.printStackTrace();
@@ -132,6 +133,33 @@ public class FirestoreRepository{
      */
     public List<Item> getFollowingItems(){
         String url = "https://asia-east2-la-lumire.cloudfunctions.net/getItemByFollowed";
+        OkHttpClient client = new OkHttpClient();
+        //send request with current userID as a parameter
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        List<Item> listOfItems = new ArrayList<>();
+        try{
+            Response response = client.newCall(request).execute();
+            //convert the response to a list of items
+            listOfItems = processItemJson(response.body().string());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return listOfItems;
+
+    }
+
+    /**
+     * This is for the "Thing you might like" section of the app
+     * @return
+     */
+    public List<Item> getSuggestedItems(){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getItemBySuggestion";
         OkHttpClient client = new OkHttpClient();
         //send request with current userID as a parameter
         RequestBody formBody = new FormBody.Builder()

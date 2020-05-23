@@ -20,6 +20,7 @@ public class HomeViewModel extends ViewModel {
     public CategoryAdapter categoryAdapter;
     public SmallItemAdapter hotItemsAdapter;
     public SmallItemAdapter followingItemsAdapter;
+    public SmallItemAdapter suggestedItemsAdapter;
     FirestoreRepository firestoreRepository;
 
     public HomeViewModel(FirestoreRepository firestoreRepository) {
@@ -84,6 +85,27 @@ public class HomeViewModel extends ViewModel {
             public void onChanged(List<Item> items) {
                 listFollowItems = items;
                 followingItemsAdapter = new SmallItemAdapter(items);
+                //remove the prevent memory leak
+                listMutableItems.removeObserver(this);
+            }
+        });
+        //return so we can observe it for changes in fragment
+        return listMutableItems;
+    }
+
+    public LiveData<List<Item>> getSuggestedItems(){
+        final MutableLiveData<List<Item>> listMutableItems =  new MutableLiveData<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //let fragment know that the value is ready
+                listMutableItems.postValue(firestoreRepository.getSuggestedItems());
+            }
+        }).start();
+        listMutableItems.observeForever(new Observer<List<Item>>() {
+            @Override
+            public void onChanged(List<Item> items) {
+                suggestedItemsAdapter = new SmallItemAdapter(items);
                 //remove the prevent memory leak
                 listMutableItems.removeObserver(this);
             }

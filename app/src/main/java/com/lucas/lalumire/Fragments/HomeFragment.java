@@ -74,6 +74,11 @@ public class HomeFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
     }
+
+    /**
+     * Function that is called on creation of fragment to ensure that the recyclerview(s) show
+     * the correct information WITHOUT reloading information.
+     */
     private void loadUI(){
         if(homeViewModelLazy.getValue().hotItemsAdapter == null) {
             final LiveData<List<Item>> ItemsObservable = homeViewModelLazy.getValue().getHotItems();
@@ -107,6 +112,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         }else{
+            //set the adapter that already exists.
             binding.categoryItems.setAdapter(homeViewModelLazy.getValue().categoryAdapter);
             binding.categoryItems.setLayoutManager(new GridLayoutManager(getActivity(), 2, GridLayoutManager.HORIZONTAL, false));
         }
@@ -131,6 +137,29 @@ public class HomeFragment extends Fragment {
             binding.followItems.setAdapter(homeViewModelLazy.getValue().followingItemsAdapter);
             //manually set layout manager in case we wanna do anything special, this doesn't take very long anyway
             binding.followItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        }
+        // and finally this one is for "Things you might like"
+        if(homeViewModelLazy.getValue().suggestedItemsAdapter == null) {
+            // call the method to get data from viewmodel
+            final LiveData<List<Item>> ItemsObservable = homeViewModelLazy.getValue().getSuggestedItems();
+            ItemsObservable.observeForever(new Observer<List<Item>>() {
+                @Override
+                public void onChanged(List<Item> items) {
+                    if (items != null) {
+                        Log.d("hehe", String.valueOf(items.size()));
+                        //set the already created adapter
+                        binding.interestItems.setAdapter(homeViewModelLazy.getValue().suggestedItemsAdapter);
+                        binding.interestItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                        //we do not need to observe anymore
+                        ItemsObservable.removeObserver(this);
+                    }
+                }
+            });
+        }else{
+            //if the adapter is not null, use it.
+            binding.interestItems.setAdapter(homeViewModelLazy.getValue().suggestedItemsAdapter);
+            //manually set layout manager in case we wanna do anything special, this doesn't take very long anyway
+            binding.interestItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         }
     }
 
