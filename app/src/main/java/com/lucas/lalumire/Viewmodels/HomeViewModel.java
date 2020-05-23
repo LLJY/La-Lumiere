@@ -10,9 +10,7 @@ import com.lucas.lalumire.Adapters.SmallItemAdapter;
 import com.lucas.lalumire.Models.Item;
 import com.lucas.lalumire.Repositories.FirestoreRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 public class HomeViewModel extends ViewModel {
     //gets the hot items
