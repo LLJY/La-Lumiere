@@ -115,24 +115,10 @@ public class FirestoreRepository{
                 .url(url)
                 .post(formBody)
                 .build();
-        ArrayList<Item> listOfItems = new ArrayList<>();
+        List<Item> listOfItems = new ArrayList<>();
         try{
-            //get this synchronously, we will do it asynchronously in ViewModel
             Response response = client.newCall(request).execute();
-            JSONArray jsonArray = new JSONArray(response.body().string());
-            for(int i =0; i<jsonArray.length(); i++){
-                ArrayList<String> itemImages = new ArrayList<>();
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                JSONArray imagesArray = jsonObject.getJSONArray("Images");
-                //parse the images, i is taken, so use l
-                for(int l=0; l<imagesArray.length(); l++){
-                    String imageURL = imagesArray.getString(l);
-                    itemImages.add(imageURL);
-                }
-                Item item = new Item(jsonObject.getString("ListingID"), jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"), jsonObject.getBoolean("userLiked"));
-                //add the item to the list.
-                listOfItems.add(item);
-            }
+            listOfItems = processItemJson(response.body().string());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -147,6 +133,7 @@ public class FirestoreRepository{
     public List<Item> getFollowingItems(){
         String url = "https://asia-east2-la-lumire.cloudfunctions.net/getItemByFollowed";
         OkHttpClient client = new OkHttpClient();
+        //send request with current userID as a parameter
         RequestBody formBody = new FormBody.Builder()
                 .add("userID", mAuth.getCurrentUser().getUid())
                 .build();
@@ -154,14 +141,25 @@ public class FirestoreRepository{
                 .url(url)
                 .post(formBody)
                 .build();
-        ArrayList<Item> listOfItems = new ArrayList<>();
+        List<Item> listOfItems = new ArrayList<>();
         try{
-            //get this synchronously, we will do it asynchronously in ViewModel
             Response response = client.newCall(request).execute();
-            JSONArray jsonArray = new JSONArray(response.body().string());
-            for(int i =0; i<jsonArray.length(); i++){
+            listOfItems = processItemJson(response.body().string());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return listOfItems;
+
+    }
+
+    private List<Item> processItemJson(String responseBody){
+        ArrayList<Item> returnList = new ArrayList<>();
+        try {
+            //convert the response body to a json array
+            JSONArray itemArray = new JSONArray(responseBody);
+            for(int i =0; i<itemArray.length(); i++){
                 ArrayList<String> itemImages = new ArrayList<>();
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                JSONObject jsonObject = itemArray.getJSONObject(i);
                 JSONArray imagesArray = jsonObject.getJSONArray("Images");
                 //parse the images, i is taken, so use l
                 for(int l=0; l<imagesArray.length(); l++){
@@ -170,13 +168,13 @@ public class FirestoreRepository{
                 }
                 Item item = new Item(jsonObject.getString("ListingID"), jsonObject.getString("Title"), jsonObject.getString("sellerName"),jsonObject.getString("sellerUID"), Uri.parse(jsonObject.getString("sellerImageURL")),jsonObject.getInt("Likes"),LocalDateTime.parse(jsonObject.getString("ListedTime"), DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")), (float) jsonObject.getDouble("Rating"),jsonObject.getString("Description"),jsonObject.getString("TransactionInformation"),jsonObject.getString("ProcurementInformation"),jsonObject.getString("Category"), jsonObject.getInt("Stock"), itemImages, jsonObject.getBoolean("isAdvert"), jsonObject.getBoolean("userLiked"));
                 //add the item to the list.
-                listOfItems.add(item);
+                returnList.add(item);
             }
-        }catch(Exception e){
+        }catch (Exception e){
             e.printStackTrace();
+            return null;
         }
-        return listOfItems;
-
+        return returnList;
     }
 
     public List<String> getCategories(){
