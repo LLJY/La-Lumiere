@@ -65,12 +65,13 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
     public void onBindViewHolder(@NonNull BigItemViewHolder holder, int position) {
         final Item item = itemList.get(position);
         holder.itemNameText.setText(item.Title);
+        holder.itemNameText.setSelected(true);
         NumberFormat format = NumberFormat.getCurrencyInstance();
         holder.itemPriceText.setText(format.format(item.Price));
         Picasso.get().load(item.sellerImageURL).into(holder.itemSellerImage);
         Picasso.get().load(item.images.get(0)).into(holder.itemImage);
         holder.itemSellerName.setText(item.sellerName);
-        if(userID != item.sellerUID){
+        if(!userID.equals(item.sellerUID)){
             holder.itemEditButton.setVisibility(View.GONE);
         }
         if(item.isLiked){

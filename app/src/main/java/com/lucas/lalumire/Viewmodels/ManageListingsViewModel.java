@@ -46,7 +46,7 @@ public class ManageListingsViewModel extends ViewModel {
                 // if adapter is null, create it, otherwise, just update it.
                 Log.d("testing", "again");
                 if(bigItemAdapter == null) {
-                    bigItemAdapter = new BigItemAdapter(items, mAuth.getUid());
+                    bigItemAdapter = new BigItemAdapter(items, mAuth.getCurrentUser().getUid());
                 }else{
                     bigItemAdapter.updateList(items);
                 }
