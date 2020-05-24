@@ -30,6 +30,19 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         this.itemList = items;
         this.userID = userID;
     }
+
+    public MutableLiveData<Item> getCardViewClickedItem() {
+        return cardViewClickedItem;
+    }
+
+    public MutableLiveData<Item> getItemEditButtonClickedItem() {
+        return itemEditButtonClickedItem;
+    }
+
+    public MutableLiveData<Item> getItemLikeButtonClickedItem() {
+        return itemLikeButtonClickedItem;
+    }
+
     @NonNull
     @Override
     public BigItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
