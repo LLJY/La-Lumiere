@@ -30,12 +30,12 @@ public class DiffUtilCallback extends DiffUtil.Callback{
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         // ListingID is always unique
-        return oldItems.get(oldItemPosition).ListingID == newItems.get(newItemPosition).ListingID;
+        return oldItems.get(oldItemPosition).ListingID.equals(newItems.get(newItemPosition).ListingID);
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldItems.get(oldItemPosition).equals(newItems.get(newItemPosition));
+        return oldItems.get(oldItemPosition) == (newItems.get(newItemPosition));
     }
 
     @Nullable

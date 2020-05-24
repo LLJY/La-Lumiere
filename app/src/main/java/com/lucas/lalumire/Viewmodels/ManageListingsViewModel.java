@@ -2,13 +2,18 @@ package com.lucas.lalumire.Viewmodels;
 
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.lucas.lalumire.Adapters.BigItemAdapter;
 import com.lucas.lalumire.Adapters.SmallItemAdapter;
 import com.lucas.lalumire.Models.Item;
@@ -25,6 +30,8 @@ public class ManageListingsViewModel extends ViewModel {
         this.firestoreRepository = firestoreRepository;
         mAuth = FirebaseAuth.getInstance();
         getSellerItems();
+        // observe the data from firestore
+        observeDataSets();
     }
 
     public LiveData<List<Item>> getListItemsLive() {
@@ -44,11 +51,10 @@ public class ManageListingsViewModel extends ViewModel {
             @Override
             public void onChanged(List<Item> items) {
                 // if adapter is null, create it, otherwise, just update it.
-                Log.d("testing", "again");
                 if(bigItemAdapter == null) {
                     bigItemAdapter = new BigItemAdapter(items, mAuth.getCurrentUser().getUid());
                 }else{
-                    bigItemAdapter.updateList(items);
+                    bigItemAdapter.updateList(items) ;
                 }
                 listItemsLive.postValue(items);
                 //remove the prevent memory leak
@@ -57,5 +63,19 @@ public class ManageListingsViewModel extends ViewModel {
         });
         //return so we can observe it for changes in fragment
         return listMutableItems;
+    }
+
+    /**
+     * This function observes firebase for data changes and reloads recyclerview data if anything changes.
+     */
+    private void observeDataSets(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // this observes for items changes
+        db.collectionGroup("Items").addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                getSellerItems();
+            }
+        });
     }
 }

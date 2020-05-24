@@ -1,5 +1,6 @@
 package com.lucas.lalumire.Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,8 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
      */
     public void updateList(List<Item> newList) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallback(this.itemList, newList));
+        // update to the new list
+        this.itemList = newList;
         diffResult.dispatchUpdatesTo(this);
     }
 
