@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
+import java.text.NumberFormat;
 import java.util.List;
 
 public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.SmallCardViewHolder> {
@@ -43,6 +44,8 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         if(item.isLiked){
             holder.likeImage.setImageResource(R.drawable.ic_favorite_red_24dp);
         }
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        holder.itemPrice.setText(formatter.format(item.Price));
     }
 
     @Override
@@ -55,6 +58,7 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         TextView itemNameText;
         TextView likedText;
         TextView sellerName;
+        TextView itemPrice;
         ImageView sellerProfileImage;
         ImageView likeImage;
 
@@ -65,6 +69,7 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
             itemNameText = binding.itemNameText;
             likedText = binding.likesAmountText;
             sellerName = binding.itemProfileNameText;
+            itemPrice = binding.itemCostText;
             sellerProfileImage = binding.itemProfileImage;
             likeImage = binding.likeImage;
         }

@@ -14,6 +14,7 @@ public class Item {
     public Uri sellerImageURL;
     public int Likes;
     public LocalDateTime ListedTime;
+    public float Price;
     public float Rating;
     public String Description;
     public String TransactionInformation;
@@ -23,25 +24,6 @@ public class Item {
     public ArrayList<String> images;
     public boolean isAdvert;
     public boolean isLiked;
-
-    public Item(String listingID, String title, String sellerName, String sellerUID, Uri sellerImageURL, int likes, LocalDateTime listedTime, float rating, String description, String transactionInformation, String procurementInformation, String category, int stock, ArrayList<String> images, boolean isAdvert, boolean isLiked) {
-        ListingID = listingID;
-        Title = title;
-        this.sellerName = sellerName;
-        this.sellerUID = sellerUID;
-        this.sellerImageURL = sellerImageURL;
-        Likes = likes;
-        ListedTime = listedTime;
-        Rating = rating;
-        Description = description;
-        TransactionInformation = transactionInformation;
-        ProcurementInformation = procurementInformation;
-        Category = category;
-        Stock = stock;
-        this.images = images;
-        this.isAdvert = isAdvert;
-        this.isLiked = isLiked;
-    }
 
     public String getListingID() {
         return ListingID;
@@ -97,6 +79,14 @@ public class Item {
 
     public void setListedTime(LocalDateTime listedTime) {
         ListedTime = listedTime;
+    }
+
+    public float getPrice() {
+        return Price;
+    }
+
+    public void setPrice(float price) {
+        Price = price;
     }
 
     public float getRating() {
@@ -169,5 +159,26 @@ public class Item {
 
     public void setLiked(boolean liked) {
         isLiked = liked;
+    }
+
+    public Item(String listingID, String title, String sellerName, String sellerUID, Uri sellerImageURL, int likes, LocalDateTime listedTime, float price, float rating, String description, String transactionInformation, String procurementInformation, String category, int stock, ArrayList<String> images, boolean isAdvert, boolean isLiked) {
+        ListingID = listingID;
+        Title = title;
+        this.sellerName = sellerName;
+        this.sellerUID = sellerUID;
+        this.sellerImageURL = sellerImageURL;
+        Likes = likes;
+        ListedTime = listedTime;
+        Price = price;
+        Rating = rating;
+        Description = description;
+        TransactionInformation = transactionInformation;
+        ProcurementInformation = procurementInformation;
+        Category = category;
+        Stock = stock;
+        this.images = images;
+        this.isAdvert = isAdvert;
+        this.isLiked = isLiked;
+
     }
 }
