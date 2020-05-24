@@ -15,9 +15,13 @@ import android.view.ViewGroup;
 import com.lucas.lalumire.R;
 import com.lucas.lalumire.Viewmodels.ManageListingsViewModel;
 
+import kotlin.Lazy;
+
+import static org.koin.androidx.viewmodel.compat.ViewModelCompat.viewModel;
+import static org.koin.java.KoinJavaComponent.inject;
 public class ManageListingsFragment extends Fragment {
 
-    private ManageListingsViewModel mViewModel;
+    private Lazy<ManageListingsViewModel> manageListingsViewModelLazy = inject(ManageListingsViewModel.class);
 
     public static ManageListingsFragment newInstance() {
         return new ManageListingsFragment();
@@ -27,13 +31,6 @@ public class ManageListingsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.manage_listings_fragment, container, false);
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(ManageListingsViewModel.class);
-        // TODO: Use the ViewModel
     }
 
 }
