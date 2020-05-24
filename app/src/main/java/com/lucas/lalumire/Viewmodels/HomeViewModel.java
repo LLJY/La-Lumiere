@@ -1,10 +1,18 @@
 package com.lucas.lalumire.Viewmodels;
 
+import android.util.Log;
+
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.MetadataChanges;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.lucas.lalumire.Adapters.CategoryAdapter;
 import com.lucas.lalumire.Adapters.SmallItemAdapter;
 import com.lucas.lalumire.Models.Item;
@@ -14,17 +22,36 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
     //gets the hot items
-    public List<Item> listHotItems;
-    public List<String> listCategories;
-    public List<Item> listFollowItems;
+    private MutableLiveData<List<Item>> listHotItems = new MutableLiveData<>();
+    private MutableLiveData<List<String>>  listCategories = new MutableLiveData<>();
+    private MutableLiveData<List<Item>>  listFollowItems = new MutableLiveData<>();
+    private MutableLiveData<List<Item>>  listSuggestedItems = new MutableLiveData<>();
     public CategoryAdapter categoryAdapter;
     public SmallItemAdapter hotItemsAdapter;
     public SmallItemAdapter followingItemsAdapter;
     public SmallItemAdapter suggestedItemsAdapter;
     FirestoreRepository firestoreRepository;
 
+
     public HomeViewModel(FirestoreRepository firestoreRepository) {
         this.firestoreRepository = firestoreRepository;
+        observeDataSets();
+    }
+    // getters for live data
+    public LiveData<List<Item>> getHotItemsLiveData(){
+        return listHotItems;
+    }
+
+    public LiveData<List<String>> getCategoriesLiveData(){
+        return listCategories;
+    }
+
+    public LiveData<List<Item>> getFollowItemsLiveData(){
+        return listFollowItems;
+    }
+
+    public LiveData<List<Item>> getSuggestedItemsLiveData(){
+        return listSuggestedItems;
     }
 
     public LiveData<List<Item>> getHotItems() {
@@ -39,8 +66,8 @@ public class HomeViewModel extends ViewModel {
         listMutableItems.observeForever(new Observer<List<Item>>() {
             @Override
             public void onChanged(List<Item> items) {
-                listHotItems = items;
                 hotItemsAdapter = new SmallItemAdapter(items);
+                listHotItems.postValue(items);
                 //remove the prevent memory leak
                 listMutableItems.removeObserver(this);
             }
@@ -62,8 +89,8 @@ public class HomeViewModel extends ViewModel {
         mutableCategories.observeForever(new Observer<List<String>>() {
             @Override
             public void onChanged(List<String> strings) {
-                listCategories = strings;
                 categoryAdapter = new CategoryAdapter(strings);
+                listCategories.postValue(strings);
                 //remove the observer to prevent memory leak
                 mutableCategories.removeObserver(this);
             }
@@ -83,8 +110,8 @@ public class HomeViewModel extends ViewModel {
         listMutableItems.observeForever(new Observer<List<Item>>() {
             @Override
             public void onChanged(List<Item> items) {
-                listFollowItems = items;
                 followingItemsAdapter = new SmallItemAdapter(items);
+                listFollowItems .postValue(items);
                 //remove the prevent memory leak
                 listMutableItems.removeObserver(this);
             }
@@ -106,12 +133,37 @@ public class HomeViewModel extends ViewModel {
             @Override
             public void onChanged(List<Item> items) {
                 suggestedItemsAdapter = new SmallItemAdapter(items);
+                listSuggestedItems.postValue(items);
                 //remove the prevent memory leak
                 listMutableItems.removeObserver(this);
             }
         });
         //return so we can observe it for changes in fragment
         return listMutableItems;
+    }
+
+    /**
+     * This function observes firebase for data changes and reloads recyclerview data if anything changes.
+     */
+    private void observeDataSets(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // this observes for items changes
+        db.collectionGroup("Items").addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                getFollowingItems();
+                getHotItems();
+                getSuggestedItems();
+            }
+        });
+        // this observes for category changes
+        db.collection("Categories").addSnapshotListener(MetadataChanges.INCLUDE, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                Log.d("update!!!", "update");
+                getCategories();
+            }
+        });
     }
 
 }
