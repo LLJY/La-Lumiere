@@ -37,6 +37,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static org.koin.java.KoinJavaComponent.get;
 import static org.koin.java.KoinJavaComponent.inject;
 
 public class FirestoreRepository{
@@ -120,6 +121,10 @@ public class FirestoreRepository{
             Response response = client.newCall(request).execute();
             //convert the response to a list of items
             listOfItems = processItemJson(response.body().string());
+            if(listOfItems == null){
+                // try again
+                getHottestItems();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -147,6 +152,10 @@ public class FirestoreRepository{
             Response response = client.newCall(request).execute();
             //convert the response to a list of items
             listOfItems = processItemJson(response.body().string());
+            if(listOfItems == null){
+                // try again
+                getFollowingItems();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -173,6 +182,10 @@ public class FirestoreRepository{
         try{
             Response response = client.newCall(request).execute();
             listOfItems = processItemJson(response.body().string());
+            if(listOfItems == null){
+                // try again
+                getSuggestedItems();
+            }
         }catch(Exception e){
             e.printStackTrace();
         }
