@@ -32,7 +32,6 @@ public class HomeViewModel extends ViewModel {
     public SmallItemAdapter suggestedItemsAdapter;
     FirestoreRepository firestoreRepository;
 
-
     public HomeViewModel(FirestoreRepository firestoreRepository) {
         this.firestoreRepository = firestoreRepository;
         observeDataSets();
