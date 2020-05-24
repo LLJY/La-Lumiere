@@ -58,4 +58,5 @@ public class ManageListingsFragment extends Fragment {
         return binding.getRoot();
     }
 
+
 }
