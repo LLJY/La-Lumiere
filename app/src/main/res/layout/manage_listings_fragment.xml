@@ -5,14 +5,28 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.ManageListingsFragment">
-
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/main_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textStyle="bold"
+        android:layout_marginStart="4dp"
         app:layout_constraintStart_toStartOf="parent"
+        android:text="Your Listings" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/item_recycler"
+        app:layout_constraintTop_toBottomOf="@id/main_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"/>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_fab"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:text="Manage Listings Fragment" />
+        android:layout_marginBottom="20dp"
+        android:src="@android:drawable/ic_input_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

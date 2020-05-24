@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lucas.lalumire.Models.Item;
@@ -41,6 +42,16 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
 
     public MutableLiveData<Item> getItemLikeButtonClickedItem() {
         return itemLikeButtonClickedItem;
+    }
+
+    /**
+     * Function that uses Diffutil to update only parts of the recyclerview list,
+     * useful as BigItemAdapter is only used on the bigger parts of the app.
+     * @param newList
+     */
+    public void updateList(List<Item> newList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtilCallback(this.itemList, newList));
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull

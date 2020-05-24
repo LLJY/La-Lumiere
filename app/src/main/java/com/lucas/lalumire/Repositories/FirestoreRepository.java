@@ -239,4 +239,34 @@ public class FirestoreRepository{
         }
         return categoryList;
     }
+
+    /**
+     * function to get the seller's items by the user's uid.
+     * for the manage listings page
+     */
+    public List<Item> getSellerItems(){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getSellerItems";
+        OkHttpClient client = new OkHttpClient();
+        //send request with current userID as a parameter
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        List<Item> listOfItems = new ArrayList<>();
+        try{
+            Response response = client.newCall(request).execute();
+            Log.d("asdasfdf", "gettings seller");
+            listOfItems = processItemJson(response.body().string());
+            if(listOfItems == null){
+                // try again
+                getSellerItems();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return listOfItems;
+    }
 }
