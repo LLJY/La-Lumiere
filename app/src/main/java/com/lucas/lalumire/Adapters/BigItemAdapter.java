@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,15 +33,15 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         this.userID = userID;
     }
 
-    public MutableLiveData<Item> getCardViewClickedItem() {
+    public LiveData<Item> getCardViewClickedItem() {
         return cardViewClickedItem;
     }
 
-    public MutableLiveData<Item> getItemEditButtonClickedItem() {
+    public LiveData<Item> getItemEditButtonClickedItem() {
         return itemEditButtonClickedItem;
     }
 
-    public MutableLiveData<Item> getItemLikeButtonClickedItem() {
+    public LiveData<Item> getItemLikeButtonClickedItem() {
         return itemLikeButtonClickedItem;
     }
 
@@ -67,6 +68,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         NumberFormat format = NumberFormat.getCurrencyInstance();
         holder.itemPriceText.setText(format.format(item.Price));
         Picasso.get().load(item.sellerImageURL).into(holder.itemSellerImage);
+        Picasso.get().load(item.images.get(0)).into(holder.itemImage);
         holder.itemSellerName.setText(item.sellerName);
         if(userID != item.sellerUID){
             holder.itemEditButton.setVisibility(View.GONE);
@@ -108,6 +110,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         TextView itemNameText;
         TextView itemPriceText;
         ImageView itemSellerImage;
+        ImageView itemImage;
         TextView itemSellerName;
         ImageButton itemEditButton;
         ImageButton itemLikeButton;
@@ -117,6 +120,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
             itemNameText = binding.itemName;
             itemPriceText = binding.itemPrice;
             itemSellerImage = binding.itemSellerImage;
+            itemImage = binding.itemImage;
             itemSellerName = binding.itemSellerName;
             itemEditButton = binding.itemEditButton;
             itemLikeButton = binding.itemLikeButton;

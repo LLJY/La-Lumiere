@@ -258,7 +258,6 @@ public class FirestoreRepository{
         List<Item> listOfItems = new ArrayList<>();
         try{
             Response response = client.newCall(request).execute();
-            Log.d("asdasfdf", "gettings seller");
             listOfItems = processItemJson(response.body().string());
             if(listOfItems == null){
                 // try again

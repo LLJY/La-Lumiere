@@ -41,7 +41,6 @@ public class ManageListingsFragment extends Fragment {
         manageListingsViewModelLazy.getValue().getListItemsLive().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
             @Override
             public void onChanged(List<Item> items) {
-                Log.d("testing", "agaian");
                 if(binding.itemRecycler.getAdapter() == null){
                     // set it to the created adapter from viewmodel
                     binding.itemRecycler.setAdapter(manageListingsViewModelLazy.getValue().bigItemAdapter);
