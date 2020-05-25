@@ -242,10 +242,17 @@
                 android:layout_marginTop="24dp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="DELETE LISTING"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:strokeColor="#d9534f"
+                android:textColor="#d9534f"
+                app:layout_constraintTop_toBottomOf="@id/payment_type_spinner"
+                app:layout_constraintStart_toStartOf="@id/desc_box"
+                app:layout_constraintEnd_toEndOf="@id/desc_box"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
