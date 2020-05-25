@@ -28,11 +28,11 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageButton
-                    android:id="@+id/menu_button"
+                    android:id="@+id/cancel_button"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="12dp"
-                    android:background="@drawable/ic_arrow_back_black_24dp"
+                    android:background="@drawable/ic_close_white_24dp"
                     android:contentDescription="icon to signify that this is a menu"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +49,16 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+                <ImageButton
+                    android:id="@+id/confirm_button"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="@drawable/ic_check_white_24dp"
+                    android:contentDescription="icon to signify that this is a menu"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/menu_label"
+                    app:layout_constraintBottom_toBottomOf="@id/menu_label"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
