@@ -3,9 +3,9 @@ package com.lucas.lalumire.koin
 import android.app.Application
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.lucas.lalumire.Repositories.FirebaseAuthRepository
-import com.lucas.lalumire.Repositories.FirestoreRepository
-import com.lucas.lalumire.Viewmodels.*
+import com.lucas.lalumire.repositories.FirebaseAuthRepository
+import com.lucas.lalumire.repositories.FirestoreRepository
+import com.lucas.lalumire.viewmodels.*
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin

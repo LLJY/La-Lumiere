@@ -8,7 +8,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.HomeFragment">
+    tools:context=".fragments.HomeFragment">
     <com.google.android.material.button.MaterialButton
         android:id="@+id/all_hot_buttons"
         app:layout_constraintTop_toTopOf="parent"
