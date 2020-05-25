@@ -3,7 +3,8 @@
     package="com.lucas.lalumire">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <application
         android:name=".koin.ApplicationComponent"
         android:allowBackup="true"
