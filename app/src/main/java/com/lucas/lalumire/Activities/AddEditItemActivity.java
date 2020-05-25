@@ -63,6 +63,23 @@ public class AddEditItemActivity extends AppCompatActivity {
         } else {
             // TODO make Item model serializable and get it here.
         }
+        // if image files are not null, set them
+        if(addEditItemViewModelLazy.getValue().image1 != null){
+            // realistically
+            binding.Image1.setImageBitmap(addEditItemViewModelLazy.getValue().image1);
+        }
+        if(addEditItemViewModelLazy.getValue().image2 != null){
+            // realistically
+            binding.Image2.setImageBitmap(addEditItemViewModelLazy.getValue().image2);
+        }
+        if(addEditItemViewModelLazy.getValue().image3 != null){
+            // realistically
+            binding.Image3.setImageBitmap(addEditItemViewModelLazy.getValue().image3);
+        }
+        if(addEditItemViewModelLazy.getValue().image4 != null){
+            // realistically
+            binding.Image4.setImageBitmap(addEditItemViewModelLazy.getValue().image4);
+        }
         // set on click listeners
         binding.Image1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,10 +122,9 @@ public class AddEditItemActivity extends AppCompatActivity {
                 addEditItemViewModelLazy.getValue().setMultiple(imageFiles);
                 // the list will never exceed 4 anyway
                 if (imageFiles.length > 1) {
-                    for (int i = 0; i < addEditItemViewModelLazy.getValue().imageFiles.size(); i++) {
+                    for (int i = 0; i < imageFiles.length; i++) {
                         // set the imageview images
-                        File file = addEditItemViewModelLazy.getValue().imageFiles.get(i);
-                       setImages(i, file);
+                        setImages(i, imageFiles[i].getFile());
                     }
                 }else{
                     // we only selected one image so set the image to the file.
@@ -133,15 +149,19 @@ public class AddEditItemActivity extends AppCompatActivity {
         switch (i) {
             case 0:
                 binding.Image1.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                addEditItemViewModelLazy.getValue().setImage(i, file.getPath());
                 break;
             case 1:
                 binding.Image2.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                addEditItemViewModelLazy.getValue().setImage(i, file.getPath());
                 break;
             case 2:
                 binding.Image3.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                addEditItemViewModelLazy.getValue().setImage(i, file.getPath());
                 break;
             case 3:
                 binding.Image4.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
+                addEditItemViewModelLazy.getValue().setImage(i, file.getPath());
                 break;
         }
     }
