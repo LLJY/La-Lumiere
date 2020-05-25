@@ -3,6 +3,7 @@ package com.lucas.lalumire.Fragments;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lucas.lalumire.Activities.AddEditItemActivity;
 import com.lucas.lalumire.Models.Item;
 import com.lucas.lalumire.R;
+import com.lucas.lalumire.Viewmodels.AddEditItemViewModel;
 import com.lucas.lalumire.Viewmodels.ManageListingsViewModel;
 import com.lucas.lalumire.databinding.ManageListingsFragmentBinding;
 
@@ -27,7 +30,7 @@ import kotlin.Lazy;
 import static org.koin.androidx.viewmodel.compat.ViewModelCompat.viewModel;
 import static org.koin.java.KoinJavaComponent.inject;
 public class ManageListingsFragment extends Fragment {
-    ManageListingsFragmentBinding binding;
+    private ManageListingsFragmentBinding binding;
 
     private Lazy<ManageListingsViewModel> manageListingsViewModelLazy = inject(ManageListingsViewModel.class);
 
@@ -47,6 +50,14 @@ public class ManageListingsFragment extends Fragment {
                     binding.itemRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 }
                 // do nothing otherwise because viewmodel will update the adapter for us.
+            }
+        });
+        binding.addFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddEditItemActivity.class);
+                intent.putExtra("Add Not Edit", true);
+                startActivity(intent);
             }
         });
     }
