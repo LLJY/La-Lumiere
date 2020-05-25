@@ -1,16 +1,20 @@
 package com.lucas.lalumire.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.lucas.lalumire.viewmodels.AddEditItemViewModel;
@@ -36,7 +40,7 @@ public class AddEditItemActivity extends AppCompatActivity {
     private EasyImage easyImage;
     private Observer imageObserver;
     private int selectedImage;
-
+    ProgressDialog pd;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -193,6 +197,7 @@ public class AddEditItemActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
     @Override
@@ -250,7 +255,7 @@ public class AddEditItemActivity extends AppCompatActivity {
         }
     }
     private void getUIFromViewModel(){
-        AddEditItemViewModel viewModel = addEditItemViewModelLazy.getValue();
+        final AddEditItemViewModel viewModel = addEditItemViewModelLazy.getValue();
         if(viewModel.Title != null){
             binding.titleText.getEditText().setText(viewModel.Title);
         }
@@ -266,5 +271,61 @@ public class AddEditItemActivity extends AppCompatActivity {
         if(viewModel.Location != null){
             binding.locationBox.getEditText().setText(viewModel.Location);
         }
+        // get the comboboxes
+        final LiveData<Boolean> isDoneLive = viewModel.getAllCombos();
+        pd = ProgressDialog.show(AddEditItemActivity.this, "Loading", "Please be patient");
+        isDoneLive.observeForever(new androidx.lifecycle.Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean aBoolean) {
+                pd.dismiss();
+                ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, viewModel.categories);
+                ArrayAdapter<String> paymentTypesAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, viewModel.paymentTypes);
+                ArrayAdapter<String> procurementTypesAdapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, viewModel.procurementTypes);
+                binding.categorySpinner.setAdapter(categoryAdapter);
+                binding.paymentTypeSpinner.setAdapter(paymentTypesAdapter);
+                binding.procurementTypeSpinner.setAdapter(procurementTypesAdapter);
+                // set the selected index values, do not animate if it is 0
+                binding.categorySpinner.setSelection(viewModel.categoriesSelectedIndex, viewModel.categoriesSelectedIndex!=0);
+                binding.paymentTypeSpinner.setSelection(viewModel.paymentTypesSelectedIndex, viewModel.paymentTypesSelectedIndex!=0);
+                binding.procurementTypeSpinner.setSelection(viewModel.procurementTypesSelectedIndex, viewModel.procurementTypesSelectedIndex!=0);
+                // once adapter is set, add the listeners
+                // save the comboboxes state when changed
+                binding.categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        addEditItemViewModelLazy.getValue().categoriesSelectedIndex = position;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                binding.paymentTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        addEditItemViewModelLazy.getValue().paymentTypesSelectedIndex = position;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                binding.procurementTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        addEditItemViewModelLazy.getValue().procurementTypesSelectedIndex = position;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+                // remove observer to prevent memory leak
+                isDoneLive.removeObserver(this);
+            }
+        });
     }
 }

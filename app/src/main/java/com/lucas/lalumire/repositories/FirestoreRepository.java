@@ -240,6 +240,50 @@ public class FirestoreRepository {
         return categoryList;
     }
 
+    public List<String> getProcurementTypes(){
+        //get from firebase cloud
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getProcurementTypes";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        ArrayList<String> procurementList = new ArrayList<>();
+        try {
+            Response response = client.newCall(request).execute();
+            JSONArray responseArray = new JSONArray(response.body().string());
+            for (int i = 0; i < responseArray.length(); i++) {
+                //get the string and add it to the array
+                procurementList.add(responseArray.getString(i));
+            }
+        } catch (Exception e) {
+            //just print the error for now, proper error handling will be implemented later.
+            e.printStackTrace();
+        }
+        return procurementList;
+    }
+
+    public List<String> getPaymentTypes(){
+        //get from firebase cloud
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/getPaymentTypes";
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        ArrayList<String> paymentTypes = new ArrayList<>();
+        try {
+            Response response = client.newCall(request).execute();
+            JSONArray responseArray = new JSONArray(response.body().string());
+            for (int i = 0; i < responseArray.length(); i++) {
+                //get the string and add it to the array
+                paymentTypes.add(responseArray.getString(i));
+            }
+        } catch (Exception e) {
+            //just print the error for now, proper error handling will be implemented later.
+            e.printStackTrace();
+        }
+        return paymentTypes;
+    }
+
     /**
      * function to get the seller's items by the user's uid.
      * for the manage listings page
