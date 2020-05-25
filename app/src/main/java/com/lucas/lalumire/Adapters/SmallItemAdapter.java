@@ -46,6 +46,7 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
         }
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         holder.itemPrice.setText(formatter.format(item.Price));
+        holder.itemNameText.setSelected(true);
     }
 
     @Override
