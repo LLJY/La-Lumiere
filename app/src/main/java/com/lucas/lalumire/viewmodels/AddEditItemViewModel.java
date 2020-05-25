@@ -16,6 +16,13 @@ public class AddEditItemViewModel extends ViewModel {
     public Bitmap image2;
     public Bitmap image3;
     public Bitmap image4;
+    public String Title;
+    public String Category;
+    public boolean isUsed;
+    public double Price;
+    public int Stock;
+    public String Description;
+    public String Location;
     FirestoreRepository firestoreRepository;
 
     public AddEditItemViewModel(FirestoreRepository firestoreRepository) {

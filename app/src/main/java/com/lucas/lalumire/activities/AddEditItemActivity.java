@@ -3,7 +3,10 @@ package com.lucas.lalumire.activities;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,6 +55,8 @@ public class AddEditItemActivity extends AppCompatActivity {
         } else {
             // TODO make Item model serializable and get it here.
         }
+        // get the UI values from view model
+        getUIFromViewModel();
         // if image files are not null, set them
         if (addEditItemViewModelLazy.getValue().image1 != null) {
             // realistically
@@ -99,6 +104,95 @@ public class AddEditItemActivity extends AppCompatActivity {
                 selectedImage = 3;
             }
         });
+
+        // set the on change listeners and update activity accordingly
+        binding.titleText.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // update the viewmodel with the text.
+                addEditItemViewModelLazy.getValue().Title = s.toString();
+            }
+        });
+        binding.usedRadiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+            }
+        });
+        binding.priceBox.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addEditItemViewModelLazy.getValue().Price = Double.parseDouble(s.toString());
+            }
+        });
+        binding.stockBox.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addEditItemViewModelLazy.getValue().Stock = Integer.parseInt(s.toString());
+            }
+        });
+        binding.descBox.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addEditItemViewModelLazy.getValue().Description = s.toString();
+            }
+        });
+        binding.locationBox.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addEditItemViewModelLazy.getValue().Location = s.toString();
+            }
+        });
+
     }
 
     @Override
@@ -153,6 +247,24 @@ public class AddEditItemActivity extends AppCompatActivity {
                 binding.Image4.setImageBitmap(BitmapFactory.decodeFile(file.getPath()));
                 addEditItemViewModelLazy.getValue().setImage(i, file.getPath());
                 break;
+        }
+    }
+    private void getUIFromViewModel(){
+        AddEditItemViewModel viewModel = addEditItemViewModelLazy.getValue();
+        if(viewModel.Title != null){
+            binding.titleText.getEditText().setText(viewModel.Title);
+        }
+        if(viewModel.Price != 0){
+            binding.priceBox.getEditText().setText(String.valueOf(viewModel.Price));
+        }
+        if(viewModel.Stock != 0){
+            binding.stockBox.getEditText().setText(String.valueOf(viewModel.Stock));
+        }
+        if(viewModel.Description != null){
+            binding.descBox.getEditText().setText(viewModel.Description);
+        }
+        if(viewModel.Location != null){
+            binding.locationBox.getEditText().setText(viewModel.Location);
         }
     }
 }
