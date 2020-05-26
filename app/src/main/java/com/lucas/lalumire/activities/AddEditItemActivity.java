@@ -1,8 +1,10 @@
 package com.lucas.lalumire.activities;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,11 +13,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -50,6 +54,20 @@ public class AddEditItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddItemBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)== PackageManager.PERMISSION_GRANTED){
+
+        }else if(shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+
+        }else{
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, 42069);
+        }
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)== PackageManager.PERMISSION_GRANTED){
+
+        }else if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)){
+
+        }else{
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 69420);
+        }
         easyImage = new EasyImage.Builder(this)
                 .allowMultiple(true)
                 .setChooserTitle("Choose your Image")
@@ -433,5 +451,48 @@ public class AddEditItemActivity extends AppCompatActivity {
 
     private void showSnack(String message){
         Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        // we might do different things for each permission but i'm kinda lazy right now
+        switch (requestCode) {
+            case 42069: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //eh
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(AddEditItemActivity.this, "Sorry, permissions must be available to do that", Toast.LENGTH_LONG).show();
+                    // kick the user out
+                    AddEditItemActivity.this.onBackPressed();
+                }
+                return;
+            }
+            case 69420: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //eh
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(AddEditItemActivity.this, "Sorry, permissions must be available to do that", Toast.LENGTH_LONG).show();
+                    // kick the user out
+                    AddEditItemActivity.this.onBackPressed();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }
