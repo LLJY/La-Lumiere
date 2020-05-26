@@ -1,6 +1,8 @@
 package com.lucas.lalumire.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -194,6 +196,36 @@ public class AddEditItemActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 addEditItemViewModelLazy.getValue().Location = s.toString();
+            }
+        });
+        // most important portion!! add onclick functions!!
+        binding.bottomSheet.confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(addEditItemViewModelLazy.getValue().isAddNotEdit){
+
+                }else{
+                    //TODO add EDIT FUNCTIONS
+                }
+            }
+        });
+        binding.bottomSheet.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //show a dialog
+                new AlertDialog.Builder(AddEditItemActivity.this)
+                        .setTitle("Cancel")
+                        .setMessage("Are you sure you want to leave now? All changes will be lost!")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // clear when cancelled
+                                addEditItemViewModelLazy.getValue().clearEverything();
+                                // go back after clearning
+                                AddEditItemActivity.this.onBackPressed();
+                            }
+                        })
+                        .setNegativeButton("No", null).show();
             }
         });
 

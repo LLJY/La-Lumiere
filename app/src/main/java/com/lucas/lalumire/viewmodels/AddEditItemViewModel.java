@@ -149,4 +149,26 @@ public class AddEditItemViewModel extends ViewModel {
         }
         return returnLiveData;
     }
+
+    /**
+     * Function that clears the viewmodel.
+     */
+    public void clearEverything(){
+        image1 = null;
+        image2=null;
+        image3=null;
+        image4=null;
+        Title=null;
+        Category=null;
+        Price=0;
+        Stock=0;
+        Description=null;
+        Location=null;
+        categories=null;
+        paymentTypes=null;
+        procurementTypes=null;
+        categoriesSelectedIndex=0;
+        paymentTypesSelectedIndex=0;
+        procurementTypesSelectedIndex=0;
+    }
 }
