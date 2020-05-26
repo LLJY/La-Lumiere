@@ -1,5 +1,6 @@
 package com.lucas.lalumire.repositories;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -7,7 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -15,6 +18,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.lucas.lalumire.models.Item;
 import com.lucas.lalumire.models.User;
 import com.lucas.lalumire.models.UserType;
@@ -22,11 +28,13 @@ import com.lucas.lalumire.models.UserType;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -37,7 +45,8 @@ import okhttp3.Response;
 public class FirestoreRepository {
     FirebaseFirestore db;
     FirebaseAuth mAuth;
-
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference = storage.getReference();
     //let koin inject the instances for us
     public FirestoreRepository(FirebaseFirestore firestore, FirebaseAuth auth) {
         db = firestore;
@@ -311,5 +320,81 @@ public class FirestoreRepository {
             e.printStackTrace();
         }
         return listOfItems;
+    }
+
+    public LiveData<Boolean> addItem(final Item item, final List<Bitmap> uploadImages){
+        final MutableLiveData<Boolean> returnLivedata = new MutableLiveData<>();
+        final ArrayList<String> imageURLs = new ArrayList<>();
+        for (int i = 0; i<uploadImages.size() ; i++) {
+            //generate a random UUID for the image name.
+            UUID uuid = UUID.randomUUID();
+            //add a storage reference for the image
+            final StorageReference imageRef = storageReference.child("Images"+uuid.toString()+".jpg");
+            // just following the firebase tutorial for uploading images
+            Bitmap imageBitmap = uploadImages.get(i);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            UploadTask uploadTask = imageRef.putBytes(data);
+            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                @Override
+                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                    if (!task.isSuccessful()) {
+                        throw task.getException();
+                    }
+                    // Continue with the task to get the download URL
+                    return imageRef.getDownloadUrl();
+                }
+            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Uri downloadUri = task.getResult();
+                        imageURLs.add(downloadUri.toString());
+                        Log.d("a", downloadUri.toString());
+                        if(imageURLs.size()==4){
+                            // run the network operation on a seperate thread
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    returnLivedata.postValue(completeAddItem(item, imageURLs));
+                                }
+                            }).start();
+                        }
+                    } else {
+                        returnLivedata.postValue(false);
+                    }
+                }
+            });
+        }
+        return returnLivedata;
+    }
+    private boolean completeAddItem(Item item, List<String> imagesURL){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/addItem";
+        //send request with current userID as a parameter
+        OkHttpClient client = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .add("Title", item.Title)
+                .add("Category", item.Category)
+                .add("Description", item.Description)
+                .add("Price", String.valueOf(item.Price))
+                .add("ProcurementInformation", item.ProcurementInformation)
+                .add("Images", imagesURL.toString())
+                .add("Stock", String.valueOf(item.Stock))
+                .add("TransactionInformation", String.valueOf(item.TransactionInformation))
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            assert response.body() != null;
+            return response.body().string().equals("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

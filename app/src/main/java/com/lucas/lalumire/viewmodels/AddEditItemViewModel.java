@@ -8,8 +8,10 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.lucas.lalumire.models.Item;
 import com.lucas.lalumire.repositories.FirestoreRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.aprilapps.easyphotopicker.MediaFile;
@@ -148,6 +150,28 @@ public class AddEditItemViewModel extends ViewModel {
             });
         }
         return returnLiveData;
+    }
+
+    public LiveData<Boolean> addItem(){
+        final MutableLiveData<Boolean> returnLiveData = new MutableLiveData<>();
+        // avoid blocking the ui thread
+                ArrayList<Bitmap> Images = new ArrayList<>();
+                Images.add(image1);
+                Images.add(image2);
+                Images.add(image3);
+                Images.add(image4);
+                Item addingItem = new Item(null, Title, null, null,null,0, null, (float)Price, 0f, Description, paymentTypes.get(paymentTypesSelectedIndex), procurementTypes.get(procurementTypesSelectedIndex), categories.get(categoriesSelectedIndex), Stock, null, false,false);
+                final LiveData<Boolean> actionLiveData = firestoreRepository.addItem(addingItem, Images);
+                actionLiveData.observeForever(new Observer<Boolean>() {
+                    @Override
+                    public void onChanged(Boolean aBoolean) {
+                        returnLiveData.postValue(aBoolean);
+                        // remove observer to prevent memory leak
+                        actionLiveData.removeObserver(this);
+                    }
+                });
+        return returnLiveData;
+
     }
 
     /**

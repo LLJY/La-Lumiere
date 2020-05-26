@@ -207,7 +207,20 @@ public class AddEditItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(addEditItemViewModelLazy.getValue().isAddNotEdit){
                     if(checkForEmpty()){
-                        // add item if successful
+                        pd = ProgressDialog.show(AddEditItemActivity.this, "wait", "lol");
+                        addEditItemViewModelLazy.getValue().addItem().observe(AddEditItemActivity.this, new androidx.lifecycle.Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean aBoolean) {
+                                pd.dismiss();
+                                if(aBoolean) {
+                                    // clear when succeeded
+                                    addEditItemViewModelLazy.getValue().clearEverything();
+                                    AddEditItemActivity.this.onBackPressed();
+                                }else{
+                                    showSnack("An Error has occured");
+                                }
+                            }
+                        });
                     }
                 }else{
                     //TODO add EDIT FUNCTIONS
@@ -370,51 +383,45 @@ public class AddEditItemActivity extends AppCompatActivity {
      * function to check and warn user for empty fields
      * @return true = successful
      */
-    private Boolean checkForEmpty() {
+    private boolean checkForEmpty() {
+        boolean returnBool = true;
         if (addEditItemViewModelLazy.getValue().image1 == null) {
-            if (addEditItemViewModelLazy.getValue().image1 == null) {
-                if (addEditItemViewModelLazy.getValue().image1 == null) {
-                    if (addEditItemViewModelLazy.getValue().image1 == null) {
-                        if (!binding.titleText.getEditText().getText().toString().isEmpty()) {
-                            if (!binding.priceBox.getEditText().getText().toString().isEmpty()) {
-                                if (!binding.stockBox.getEditText().getText().toString().isEmpty()) {
-                                    if (!binding.descBox.getEditText().getText().toString().isEmpty()) {
-                                        if (!binding.locationBox.getEditText().getText().toString().isEmpty()) {
-                                            return true;
-                                        } else {
-                                            // location empty
-                                            setRequiredError(binding.locationBox);
-                                        }
-                                    } else {
-                                        //description empty
-                                        setRequiredError(binding.descBox);
-                                    }
-                                } else {
-                                    // stock empty
-                                    setRequiredError(binding.stockBox);
-                                }
-                            } else {
-                                // price empty
-                                setRequiredError(binding.priceBox);
-                            }
-                        } else {
-                            // title empty
-                            setRequiredError(binding.titleText);
-                        }
-                    }else{
-                        // Image1 empty
-                        showSnack("4 Images required!");
-                    }
-                }else{
-                    showSnack("4 Images required!");
-                }
-            }else{
-                showSnack("4 Images required!");
-            }
-        }else{
-            showSnack("4 Images required!");
+            returnBool = false;
+            showSnack("All 4 Images Required");
         }
-        return false;
+        if (addEditItemViewModelLazy.getValue().image1 == null) {
+            returnBool = false;
+            showSnack("All 4 Images Required");
+        }
+        if (addEditItemViewModelLazy.getValue().image1 == null) {
+            returnBool = false;
+            showSnack("All 4 Images Required");
+        }
+        if (addEditItemViewModelLazy.getValue().image1 == null) {
+            returnBool = false;
+            showSnack("All 4 Images Required");
+        }
+        if (binding.titleText.getEditText().getText().toString().isEmpty()) {
+            returnBool = false;
+            setRequiredError(binding.titleText);
+        }
+        if (binding.priceBox.getEditText().getText().toString().isEmpty()) {
+            returnBool = false;
+            setRequiredError(binding.priceBox);
+        }
+        if (binding.stockBox.getEditText().getText().toString().isEmpty()) {
+            returnBool = false;
+            setRequiredError(binding.stockBox);
+        }
+        if (binding.descBox.getEditText().getText().toString().isEmpty()) {
+            returnBool = false;
+            setRequiredError(binding.descBox);
+        }
+        if (binding.locationBox.getEditText().getText().toString().isEmpty()) {
+            returnBool = false;
+            setRequiredError(binding.locationBox);
+        }
+        return returnBool;
     }
 
     private void setRequiredError(TextInputLayout layout){
