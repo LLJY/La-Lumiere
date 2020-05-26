@@ -380,7 +380,10 @@ public class FirestoreRepository {
                 .add("Description", item.Description)
                 .add("Price", String.valueOf(item.Price))
                 .add("ProcurementInformation", item.ProcurementInformation)
-                .add("Images", imagesURL.toString())
+                .add("Image1", imagesURL.get(0))
+                .add("Image2", imagesURL.get(1))
+                .add("Image3", imagesURL.get(2))
+                .add("Image4", imagesURL.get(3))
                 .add("Stock", String.valueOf(item.Stock))
                 .add("TransactionInformation", String.valueOf(item.TransactionInformation))
                 .build();
