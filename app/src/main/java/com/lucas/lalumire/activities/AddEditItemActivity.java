@@ -1,6 +1,5 @@
 package com.lucas.lalumire.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,12 +14,15 @@ import android.widget.RadioGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.lucas.lalumire.viewmodels.AddEditItemViewModel;
+import com.google.android.material.textfield.TextInputLayout;
+import com.lucas.lalumire.R;
 import com.lucas.lalumire.databinding.ActivityAddItemBinding;
+import com.lucas.lalumire.viewmodels.AddEditItemViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -119,7 +121,7 @@ public class AddEditItemActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                clearError(binding.titleText);
             }
 
             @Override
@@ -131,7 +133,8 @@ public class AddEditItemActivity extends AppCompatActivity {
         binding.usedRadiogroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-
+                // set the boolean to a statement checking if the used radio was ticked
+                addEditItemViewModelLazy.getValue().isUsed = checkedId == R.id.used_radio;
             }
         });
         binding.priceBox.getEditText().addTextChangedListener(new TextWatcher() {
@@ -142,7 +145,7 @@ public class AddEditItemActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                clearError(binding.priceBox);
             }
 
             @Override
@@ -158,7 +161,7 @@ public class AddEditItemActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                clearError(binding.stockBox);
             }
 
             @Override
@@ -174,7 +177,7 @@ public class AddEditItemActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                clearError(binding.descBox);
             }
 
             @Override
@@ -190,7 +193,7 @@ public class AddEditItemActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                clearError(binding.locationBox);
             }
 
             @Override
@@ -203,7 +206,9 @@ public class AddEditItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(addEditItemViewModelLazy.getValue().isAddNotEdit){
-
+                    if(checkForEmpty()){
+                        // add item if successful
+                    }
                 }else{
                     //TODO add EDIT FUNCTIONS
                 }
@@ -359,5 +364,67 @@ public class AddEditItemActivity extends AppCompatActivity {
                 isDoneLive.removeObserver(this);
             }
         });
+    }
+
+    /**
+     * function to check and warn user for empty fields
+     * @return true = successful
+     */
+    private Boolean checkForEmpty() {
+        if (addEditItemViewModelLazy.getValue().image1 == null) {
+            if (addEditItemViewModelLazy.getValue().image1 == null) {
+                if (addEditItemViewModelLazy.getValue().image1 == null) {
+                    if (addEditItemViewModelLazy.getValue().image1 == null) {
+                        if (!binding.titleText.getEditText().getText().toString().isEmpty()) {
+                            if (!binding.priceBox.getEditText().getText().toString().isEmpty()) {
+                                if (!binding.stockBox.getEditText().getText().toString().isEmpty()) {
+                                    if (!binding.descBox.getEditText().getText().toString().isEmpty()) {
+                                        if (!binding.locationBox.getEditText().getText().toString().isEmpty()) {
+                                            return true;
+                                        } else {
+                                            // location empty
+                                            setRequiredError(binding.locationBox);
+                                        }
+                                    } else {
+                                        //description empty
+                                        setRequiredError(binding.descBox);
+                                    }
+                                } else {
+                                    // stock empty
+                                    setRequiredError(binding.stockBox);
+                                }
+                            } else {
+                                // price empty
+                                setRequiredError(binding.priceBox);
+                            }
+                        } else {
+                            // title empty
+                            setRequiredError(binding.titleText);
+                        }
+                    }else{
+                        // Image1 empty
+                        showSnack("4 Images required!");
+                    }
+                }else{
+                    showSnack("4 Images required!");
+                }
+            }else{
+                showSnack("4 Images required!");
+            }
+        }else{
+            showSnack("4 Images required!");
+        }
+        return false;
+    }
+
+    private void setRequiredError(TextInputLayout layout){
+        layout.setError("Required");
+    }
+    private void clearError(TextInputLayout layout){
+        layout.setError(null);
+    }
+
+    private void showSnack(String message){
+        Snackbar.make(binding.coordinator, message, Snackbar.LENGTH_LONG).show();
     }
 }
