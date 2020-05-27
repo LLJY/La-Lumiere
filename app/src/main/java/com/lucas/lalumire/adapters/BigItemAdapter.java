@@ -75,6 +75,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         Picasso.get().load(item.sellerImageURL).into(holder.itemSellerImage);
         Picasso.get().load(item.images.get(0)).into(holder.itemImage);
         holder.itemSellerName.setText(item.sellerName);
+        holder.itemStock.setText(String.valueOf(item.Stock)+" in Stock");
         if (!userID.equals(item.sellerUID)) {
             holder.itemEditButton.setVisibility(View.GONE);
         }
@@ -117,6 +118,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         ImageView itemSellerImage;
         ImageView itemImage;
         TextView itemSellerName;
+        TextView itemStock;
         ImageButton itemEditButton;
         ImageButton itemLikeButton;
 
@@ -128,6 +130,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
             itemSellerImage = binding.itemSellerImage;
             itemImage = binding.itemImage;
             itemSellerName = binding.itemSellerName;
+            itemStock = binding.itemStockLabel;
             itemEditButton = binding.itemEditButton;
             itemLikeButton = binding.itemLikeButton;
         }

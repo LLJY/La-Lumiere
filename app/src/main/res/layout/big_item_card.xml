@@ -62,6 +62,7 @@
                 app:layout_constraintStart_toStartOf="@id/item_name"
                 app:layout_constraintTop_toBottomOf="@id/item_name"/>
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/item_stock_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
