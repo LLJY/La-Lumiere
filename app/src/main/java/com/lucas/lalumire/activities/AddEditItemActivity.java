@@ -24,6 +24,7 @@ import androidx.lifecycle.LiveData;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.lucas.lalumire.Loading;
 import com.lucas.lalumire.R;
 import com.lucas.lalumire.databinding.ActivityAddItemBinding;
 import com.lucas.lalumire.viewmodels.AddEditItemViewModel;
@@ -225,7 +226,7 @@ public class AddEditItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(addEditItemViewModelLazy.getValue().isAddNotEdit){
                     if(checkForEmpty()){
-                        pd = ProgressDialog.show(AddEditItemActivity.this, "wait", "lol");
+                        pd = Loading.showWittyLoadingDialog(AddEditItemActivity.this);
                         addEditItemViewModelLazy.getValue().addItem().observe(AddEditItemActivity.this, new androidx.lifecycle.Observer<Boolean>() {
                             @Override
                             public void onChanged(Boolean aBoolean) {
@@ -341,7 +342,7 @@ public class AddEditItemActivity extends AppCompatActivity {
         }
         // get the comboboxes
         final LiveData<Boolean> isDoneLive = viewModel.getAllCombos();
-        pd = ProgressDialog.show(AddEditItemActivity.this, "Loading", "Please be patient");
+        pd = Loading.showWittyLoadingDialog(AddEditItemActivity.this);
         isDoneLive.observeForever(new androidx.lifecycle.Observer<Boolean>() {
             @Override
             public void onChanged(Boolean aBoolean) {

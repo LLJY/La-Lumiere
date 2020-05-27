@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.lucas.lalumire.Loading;
 import com.lucas.lalumire.fragments.FragmentTransactions;
 import com.lucas.lalumire.fragments.HomeFragment;
 import com.lucas.lalumire.models.MenuItem;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainScreenBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         FragmentTransactions.LaunchFragment(new HomeFragment(), R.id.main_fragment_holder, MainActivity.this, false);
-        pd = ProgressDialog.show(this, "Loading", "Please wait...");
+        pd = Loading.showWittyLoadingDialog(this);
         //start the home fragment
         LiveData observeOnce = mainViewModelLazy.getValue().getUserLiveData();
         View.OnClickListener expandBottomSheetOnClick = new View.OnClickListener() {

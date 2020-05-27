@@ -7,10 +7,12 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.lucas.lalumire.Loading;
 import com.lucas.lalumire.fragments.FragmentTransactions;
 import com.lucas.lalumire.fragments.LoginFragment;
 import com.lucas.lalumire.fragments.SignUpFragment;
@@ -59,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                     switch (it) {
                         //if an error has occured, just print and error on the snackbar.
                         case STATUS_LOADING:
-                            pd = ProgressDialog.show(LoginActivity.this, "Loading...", "Please Wait...");
+                            pd = Loading.showWittyLoadingDialog(LoginActivity.this);
                             break;
                         case STATUS_BAD_EMAIL:
                             pd.dismiss();
