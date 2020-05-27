@@ -25,6 +25,8 @@ public class LoginViewModel extends ViewModel {
     FirebaseAuthRepository firebaseAuthRepository;
     Lazy<FirebaseAuth> mAuthLazy = inject(FirebaseAuth.class);
     private MutableLiveData<LoginActivityStatus> mutableSuccess = new MutableLiveData<>();
+    //for avoiding animation when app is already started.
+    public boolean isStarted = false;
     //store variables
     public String Email = "";
     public String Username = "";

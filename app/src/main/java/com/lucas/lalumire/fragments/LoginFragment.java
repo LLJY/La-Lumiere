@@ -53,32 +53,34 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final ConstraintSet constraintSet1 = new ConstraintSet();
-        constraintSet1.clone(binding.constraintLayout);
-        ConstraintSet constraintSet2 = new ConstraintSet();
-        constraintSet2.clone(getContext(), R.layout.splash_screen);
-        // set the starting splash screen
-        TransitionManager.beginDelayedTransition(binding.constraintLayout);
-        constraintSet2.applyTo(binding.constraintLayout);
-        binding.emailBox.setVisibility(View.INVISIBLE);
-        binding.passwordText.setVisibility(View.INVISIBLE);
-        binding.loginButton.setVisibility(View.INVISIBLE);
-        binding.googleButton.setVisibility(View.INVISIBLE);
-        binding.materialTextView.setVisibility(View.INVISIBLE);
-        // delay for 3s before setting view visible
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                TransitionManager.beginDelayedTransition(binding.constraintLayout);
-                constraintSet1.applyTo(binding.constraintLayout);
-                binding.emailBox.setVisibility(View.VISIBLE);
-                binding.passwordText.setVisibility(View.VISIBLE);
-                binding.loginButton.setVisibility(View.VISIBLE);
-                binding.googleButton.setVisibility(View.VISIBLE);
-                binding.materialTextView.setVisibility(View.VISIBLE);
-            }
-        }, 1600);
-
+        if(!loginViewModel.getValue().isStarted) {
+            final ConstraintSet constraintSet1 = new ConstraintSet();
+            constraintSet1.clone(binding.constraintLayout);
+            ConstraintSet constraintSet2 = new ConstraintSet();
+            constraintSet2.clone(getContext(), R.layout.splash_screen);
+            // set the starting splash screen
+            TransitionManager.beginDelayedTransition(binding.constraintLayout);
+            constraintSet2.applyTo(binding.constraintLayout);
+            binding.emailBox.setVisibility(View.INVISIBLE);
+            binding.passwordText.setVisibility(View.INVISIBLE);
+            binding.loginButton.setVisibility(View.INVISIBLE);
+            binding.googleButton.setVisibility(View.INVISIBLE);
+            binding.materialTextView.setVisibility(View.INVISIBLE);
+            // delay for 3s before setting view visible
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    TransitionManager.beginDelayedTransition(binding.constraintLayout);
+                    constraintSet1.applyTo(binding.constraintLayout);
+                    binding.emailBox.setVisibility(View.VISIBLE);
+                    binding.passwordText.setVisibility(View.VISIBLE);
+                    binding.loginButton.setVisibility(View.VISIBLE);
+                    binding.googleButton.setVisibility(View.VISIBLE);
+                    binding.materialTextView.setVisibility(View.VISIBLE);
+                }
+            }, 1600);
+            loginViewModel.getValue().isStarted = true;
+        }
         //set the username text from viewmodel, worth noting that this is actually email.
         binding.emailBox.getEditText().setText(loginViewModel.getValue().loginUsername);
         binding.loginButton.setOnClickListener(new View.OnClickListener() {
