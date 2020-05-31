@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <com.google.android.material.appbar.AppBarLayout
+        android:background="@color/background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -92,7 +93,7 @@
                 android:background="?android:attr/dividerVertical"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:layout_marginTop="24dp"/>
+                android:layout_marginTop="12dp"/>
             <ImageView
                 android:id="@+id/likes_image"
                 android:src="@drawable/ic_favorite_red_24dp"
