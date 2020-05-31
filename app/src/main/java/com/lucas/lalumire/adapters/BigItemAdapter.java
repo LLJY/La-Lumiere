@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,11 +32,15 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
     private MutableLiveData<Item> itemUnLikeButtonClickedItem = new MutableLiveData<>();
     public BigItemAdapter(List<Item> items, String userID) {
         this.itemList = items;
-        this.userID = userID;
+        this.userID = userID;// set observe forever, we don't really have a choice
     }
 
     public LiveData<Item> getCardViewClickedItem() {
         return cardViewClickedItem;
+    }
+
+    public void resetCardClick(){
+        cardViewClickedItem.setValue(null);
     }
 
     public LiveData<Item> getItemEditButtonClickedItem() {
@@ -65,6 +70,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
     @Override
     public BigItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new BigItemViewHolder(BigItemCardBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+
     }
 
     @Override

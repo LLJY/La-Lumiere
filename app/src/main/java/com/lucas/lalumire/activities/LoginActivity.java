@@ -7,6 +7,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.IntentCompat;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 
@@ -127,9 +129,10 @@ public class LoginActivity extends AppCompatActivity {
     private void startLoginActivity() {
         Intent startLoginActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
         //clear the backstack as it is undesirable for the user to enter the login screen again
-        startLoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startLoginActivityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         //TODO Pass MainActivity user's uid or token
         startActivity(startLoginActivityIntent);
+        ActivityCompat.finishAffinity(LoginActivity.this);
     }
 
     @Override

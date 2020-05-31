@@ -50,6 +50,13 @@ public class AddEditItemActivity extends AppCompatActivity {
     private Observer imageObserver;
     private int selectedImage;
     ProgressDialog pd;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -146,6 +146,22 @@ public class HomeFragment extends Fragment {
                 if(items.size() == 0){
                     binding.followNothingText.setVisibility(View.VISIBLE);
                 }
+                homeViewModelLazy.getValue().followingItemsAdapter.getLikedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item!=null) {
+                            homeViewModelLazy.getValue().likeItem(item);
+                        }
+                    }
+                });
+                homeViewModelLazy.getValue().followingItemsAdapter.getUnlikedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item!=null) {
+                            homeViewModelLazy.getValue().unlikeItem(item);
+                        }
+                    }
+                });
             }
         });
         homeViewModelLazy.getValue().getSuggestedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
@@ -159,6 +175,22 @@ public class HomeFragment extends Fragment {
                 if(items.size() == 0){
                     binding.interestNothingText.setVisibility(View.VISIBLE);
                 }
+                homeViewModelLazy.getValue().suggestedItemsAdapter.getLikedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item!=null) {
+                            homeViewModelLazy.getValue().likeItem(item);
+                        }
+                    }
+                });
+                homeViewModelLazy.getValue().suggestedItemsAdapter.getUnlikedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item!=null) {
+                            homeViewModelLazy.getValue().unlikeItem(item);
+                        }
+                    }
+                });
             }
         });
 

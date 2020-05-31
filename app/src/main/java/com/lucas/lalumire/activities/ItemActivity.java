@@ -24,6 +24,11 @@ public class ItemActivity extends AppCompatActivity {
     ActivityItemBinding binding;
     Lazy<ItemViewModel> viewModelLazy = viewModel(this, ItemViewModel.class);
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+    }
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityItemBinding.inflate(getLayoutInflater());

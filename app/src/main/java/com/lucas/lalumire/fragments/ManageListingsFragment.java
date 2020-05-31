@@ -48,7 +48,10 @@ public class ManageListingsFragment extends Fragment {
                 manageListingsViewModelLazy.getValue().bigItemAdapter.getCardViewClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
                     @Override
                     public void onChanged(Item item) {
-                        startItemActivity(item);
+                        if(item !=null) {
+                            startItemActivity(item);
+                            manageListingsViewModelLazy.getValue().bigItemAdapter.resetCardClick();
+                        }
                     }
                 });
                 manageListingsViewModelLazy.getValue().bigItemAdapter.getItemLikeButtonClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
