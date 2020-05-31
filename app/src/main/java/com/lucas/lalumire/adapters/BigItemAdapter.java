@@ -28,7 +28,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
     private MutableLiveData<Item> cardViewClickedItem = new MutableLiveData<>();
     private MutableLiveData<Item> itemEditButtonClickedItem = new MutableLiveData<>();
     private MutableLiveData<Item> itemLikeButtonClickedItem = new MutableLiveData<>();
-
+    private MutableLiveData<Item> itemUnLikeButtonClickedItem = new MutableLiveData<>();
     public BigItemAdapter(List<Item> items, String userID) {
         this.itemList = items;
         this.userID = userID;
@@ -66,7 +66,7 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BigItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final BigItemViewHolder holder, int position) {
         final Item item = itemList.get(position);
         holder.itemNameText.setText(item.Title);
         holder.itemNameText.setSelected(true);
@@ -78,9 +78,11 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         holder.itemStock.setText(String.valueOf(item.Stock)+" in Stock");
         if (!userID.equals(item.sellerUID)) {
             holder.itemEditButton.setVisibility(View.GONE);
+            item.isLiked = false;
         }
         if (item.isLiked) {
             holder.itemLikeButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+            item.isLiked = true;
         }
         // set on click listeners
         holder.mainCardView.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +104,20 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
             public void onClick(View v) {
                 // notify any observers in fragment/activity and give them the item.
                 itemLikeButtonClickedItem.postValue(item);
+            }
+        });
+        holder.itemLikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(item.isLiked){
+                    holder.itemLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    item.isLiked = false;
+                    item.Likes--;
+                }else{
+                    holder.itemLikeButton.setImageResource(R.drawable.ic_favorite_red_24dp);
+                    item.isLiked = true;
+                    item.Likes++;
+                }
             }
         });
     }

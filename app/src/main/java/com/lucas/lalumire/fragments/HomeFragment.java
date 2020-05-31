@@ -108,6 +108,22 @@ public class HomeFragment extends Fragment {
                 binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                 homeViewModelLazy.getValue().hotItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
                 binding.hotShimmer.setVisibility(View.GONE);
+                homeViewModelLazy.getValue().hotItemsAdapter.getLikedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item!=null) {
+                            homeViewModelLazy.getValue().likeItem(item);
+                        }
+                    }
+                });
+                homeViewModelLazy.getValue().hotItemsAdapter.getUnlikedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item!=null) {
+                            homeViewModelLazy.getValue().unlikeItem(item);
+                        }
+                    }
+                });
 
             }
         });

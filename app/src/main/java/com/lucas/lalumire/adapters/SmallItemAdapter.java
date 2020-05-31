@@ -26,6 +26,16 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
     public SmallItemAdapter(List<Item> items) {
         this.itemsList = items;
     }
+    private MutableLiveData<Item> likedItem = new MutableLiveData<>();
+    private MutableLiveData<Item> unlikedItem = new MutableLiveData<>();
+
+    public LiveData<Item> getLikedItem() {
+        return likedItem;
+    }
+
+    public LiveData<Item> getUnlikedItem() {
+        return unlikedItem;
+    }
 
     @NonNull
     @Override
@@ -39,7 +49,7 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SmallCardViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final SmallCardViewHolder holder, final int position) {
         final Item item = itemsList.get(position);
         //use picasso to asynchronously load the images
         Picasso.get().load(item.images.get(0)).into(holder.itemImage);
@@ -59,6 +69,22 @@ public class SmallItemAdapter extends RecyclerView.Adapter<SmallItemAdapter.Smal
             @Override
             public void onClick(View v) {
                 selectedItem.postValue(item);
+            }
+        });
+        holder.likeImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(item.isLiked){
+                    item.isLiked = false;
+                    item.Likes--;
+                    unlikedItem.postValue(item);
+
+                }else{
+                    item.isLiked = true;
+                    item.Likes++;
+                    likedItem.postValue(item);
+                }
+                notifyItemChanged(position);
             }
         });
     }

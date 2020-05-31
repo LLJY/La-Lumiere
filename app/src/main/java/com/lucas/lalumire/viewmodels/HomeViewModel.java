@@ -164,5 +164,27 @@ public class HomeViewModel extends ViewModel {
             }
         });
     }
+    public LiveData<Boolean> likeItem(final Item item){
+        final MutableLiveData<Boolean> returnLiveData = new MutableLiveData<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // let the observers know
+                returnLiveData.postValue(firestoreRepository.likeItem(item));
+            }
+        }).start();
+        return returnLiveData;
+    }
+    public LiveData<Boolean> unlikeItem(final Item item){
+        final MutableLiveData<Boolean> returnLiveData = new MutableLiveData<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // let the observers know
+                returnLiveData.postValue(firestoreRepository.unLikeItem(item));
+            }
+        }).start();
+        return returnLiveData;
+    }
 
 }

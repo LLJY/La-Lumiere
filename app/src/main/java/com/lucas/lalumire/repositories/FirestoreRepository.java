@@ -321,6 +321,50 @@ public class FirestoreRepository {
         }
         return listOfItems;
     }
+    public Boolean likeItem(Item item){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/likeItem";
+        OkHttpClient client = new OkHttpClient();
+        //send request with current userID as a parameter
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .add("itemID", item.ListingID)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if(response.toString().equals("success")){
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public Boolean unLikeItem(Item item){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/unLikeItem";
+        OkHttpClient client = new OkHttpClient();
+        //send request with current userID as a parameter
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .add("itemID", item.ListingID)
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            if(response.toString().equals("success")){
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public LiveData<Boolean> addItem(final Item item, final List<Bitmap> uploadImages){
         final MutableLiveData<Boolean> returnLivedata = new MutableLiveData<>();
