@@ -30,6 +30,15 @@
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="4dp"
         android:text="Hot Items 🔥"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/hot_shimmer"
+        app:layout_constraintTop_toBottomOf="@id/all_hot_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="230dp">
+        <include
+            android:id="@+id/hot_placeholder"
+            layout="@layout/card_placeholder"/>
+    </com.facebook.shimmer.ShimmerFrameLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/hot_items"
         android:layout_width="match_parent"
@@ -77,6 +86,26 @@
         android:layout_marginEnd="4dp"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:text="More..."/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/follow_shimmer"
+        app:layout_constraintTop_toBottomOf="@id/all_follow_button"
+        android:layout_width="match_parent"
+        android:layout_height="230dp">
+        <include
+            android:id="@+id/follow_placeholder"
+            layout="@layout/card_placeholder"/>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/follow_nothing_text"
+        app:layout_constraintTop_toBottomOf="@id/all_follow_button"
+        app:layout_constraintBottom_toBottomOf="@id/follow_items"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:text="We do not have anything to show you 🥺"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/follow_items"
         android:layout_width="match_parent"
@@ -107,6 +136,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="4dp"
         style="@style/Widget.MaterialComponents.Button.TextButton"/>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/interest_shimmer"
+        app:layout_constraintTop_toBottomOf="@id/all_interest_button"
+        android:layout_width="match_parent"
+        android:layout_height="230dp">
+        <include
+            android:id="@+id/interest_placeholder"
+            layout="@layout/card_placeholder"/>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/interest_nothing_text"
+        app:layout_constraintTop_toBottomOf="@id/all_interest_button"
+        app:layout_constraintBottom_toBottomOf="@id/interest_items"
+        android:textAlignment="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#000"
+        android:text="We do not have anything to show you 🥺"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/interest_items"
         android:layout_width="match_parent"

@@ -42,6 +42,11 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.followShimmer.startShimmerAnimation();
+        binding.hotShimmer.startShimmerAnimation();
+        binding.interestShimmer.startShimmerAnimation();
+        binding.followNothingText.setVisibility(View.GONE);
+        binding.interestNothingText.setVisibility(View.GONE);
         //if user does not exist yet, observe and wait.
         if (mainViewModel.getValue().getUserLiveData().getValue() == null) {
             mainViewModel.getValue().getUserLiveData().observe(getViewLifecycleOwner(), new Observer() {
@@ -102,6 +107,7 @@ public class HomeFragment extends Fragment {
                 binding.hotItems.setAdapter(homeViewModelLazy.getValue().hotItemsAdapter);
                 binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                 homeViewModelLazy.getValue().hotItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
+                binding.hotShimmer.setVisibility(View.GONE);
 
             }
         });
@@ -120,6 +126,10 @@ public class HomeFragment extends Fragment {
                 binding.followItems.setAdapter(homeViewModelLazy.getValue().followingItemsAdapter);
                 binding.followItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                 homeViewModelLazy.getValue().followingItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
+                binding.followShimmer.setVisibility(View.GONE);
+                if(items.size() == 0){
+                    binding.followNothingText.setVisibility(View.VISIBLE);
+                }
             }
         });
         homeViewModelLazy.getValue().getSuggestedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
@@ -129,7 +139,10 @@ public class HomeFragment extends Fragment {
                 binding.interestItems.setAdapter(homeViewModelLazy.getValue().suggestedItemsAdapter);
                 binding.interestItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
                 homeViewModelLazy.getValue().suggestedItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
-
+                binding.interestShimmer.setVisibility(View.GONE);
+                if(items.size() == 0){
+                    binding.interestNothingText.setVisibility(View.VISIBLE);
+                }
             }
         });
 
