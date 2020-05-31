@@ -1,6 +1,8 @@
 package com.lucas.lalumire.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.lucas.lalumire.activities.ItemActivity;
 import com.lucas.lalumire.models.Item;
 import com.lucas.lalumire.models.User;
 import com.lucas.lalumire.viewmodels.HomeViewModel;
@@ -76,6 +79,14 @@ public class HomeFragment extends Fragment {
      * the correct information WITHOUT reloading information.
      */
     private void loadUI() {
+        final Observer<Item> clickObserver = new Observer<Item>() {
+            @Override
+            public void onChanged(Item item) {
+                Log.d("a", item.Category);
+                //when item is clicked, startActivity
+                startItemActivity(item);
+            }
+        };
         // if the adapters do not exist, call the viewmodel methods for getting data
         if (homeViewModelLazy.getValue().suggestedItemsAdapter == null || homeViewModelLazy.getValue().followingItemsAdapter == null || homeViewModelLazy.getValue().categoryAdapter == null || homeViewModelLazy.getValue().hotItemsAdapter == null) {
             homeViewModelLazy.getValue().getHotItems();
@@ -90,6 +101,8 @@ public class HomeFragment extends Fragment {
                 // if livedata has changed, viewmodel would have created an adapter.
                 binding.hotItems.setAdapter(homeViewModelLazy.getValue().hotItemsAdapter);
                 binding.hotItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                homeViewModelLazy.getValue().hotItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
+
             }
         });
         homeViewModelLazy.getValue().getCategoriesLiveData().observe(getViewLifecycleOwner(), new Observer<List<String>>() {
@@ -106,6 +119,7 @@ public class HomeFragment extends Fragment {
                 // if livedata has changed, viewmodel would have created an adapter.
                 binding.followItems.setAdapter(homeViewModelLazy.getValue().followingItemsAdapter);
                 binding.followItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                homeViewModelLazy.getValue().followingItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
             }
         });
         homeViewModelLazy.getValue().getSuggestedItemsLiveData().observe(getViewLifecycleOwner(), new Observer<List<Item>>() {
@@ -114,8 +128,16 @@ public class HomeFragment extends Fragment {
                 // if livedata has changed, viewmodel would have created an adapter.
                 binding.interestItems.setAdapter(homeViewModelLazy.getValue().suggestedItemsAdapter);
                 binding.interestItems.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+                homeViewModelLazy.getValue().suggestedItemsAdapter.getSelectedItemLive().observe(getViewLifecycleOwner(), clickObserver);
+
             }
         });
+
+    }
+    private void startItemActivity(Item item){
+        Intent intent = new Intent(getActivity(), ItemActivity.class);
+        intent.putExtra("Item", item);
+        startActivity(intent);
     }
 
 

@@ -2,15 +2,16 @@ package com.lucas.lalumire.models;
 
 import android.net.Uri;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Item {
+public class Item implements Serializable {
     public String ListingID;
     public String Title;
     public String sellerName;
     public String sellerUID;
-    public Uri sellerImageURL;
+    public String sellerImageURL;
     public int Likes;
     public LocalDateTime ListedTime;
     public float Price;
@@ -23,6 +24,30 @@ public class Item {
     public ArrayList<String> images;
     public boolean isAdvert;
     public boolean isLiked;
+    public boolean isUsed;
+    public String Location;
+
+    public Item(String listingID, String title, String sellerName, String sellerUID, String sellerImageURL, int likes, LocalDateTime listedTime, float price, float rating, String description, String transactionInformation, String procurementInformation, String category, int stock, ArrayList<String> images, boolean isAdvert, boolean isLiked, boolean isUsed, String location) {
+        ListingID = listingID;
+        Title = title;
+        this.sellerName = sellerName;
+        this.sellerUID = sellerUID;
+        this.sellerImageURL = sellerImageURL;
+        Likes = likes;
+        ListedTime = listedTime;
+        Price = price;
+        Rating = rating;
+        Description = description;
+        TransactionInformation = transactionInformation;
+        ProcurementInformation = procurementInformation;
+        Category = category;
+        Stock = stock;
+        this.images = images;
+        this.isAdvert = isAdvert;
+        this.isLiked = isLiked;
+        this.isUsed = isUsed;
+        Location = location;
+    }
 
     public String getListingID() {
         return ListingID;
@@ -56,11 +81,11 @@ public class Item {
         this.sellerUID = sellerUID;
     }
 
-    public Uri getSellerImageURL() {
+    public String getSellerImageURL() {
         return sellerImageURL;
     }
 
-    public void setSellerImageURL(Uri sellerImageURL) {
+    public void setSellerImageURL(String sellerImageURL) {
         this.sellerImageURL = sellerImageURL;
     }
 
@@ -160,24 +185,19 @@ public class Item {
         isLiked = liked;
     }
 
-    public Item(String listingID, String title, String sellerName, String sellerUID, Uri sellerImageURL, int likes, LocalDateTime listedTime, float price, float rating, String description, String transactionInformation, String procurementInformation, String category, int stock, ArrayList<String> images, boolean isAdvert, boolean isLiked) {
-        ListingID = listingID;
-        Title = title;
-        this.sellerName = sellerName;
-        this.sellerUID = sellerUID;
-        this.sellerImageURL = sellerImageURL;
-        Likes = likes;
-        ListedTime = listedTime;
-        Price = price;
-        Rating = rating;
-        Description = description;
-        TransactionInformation = transactionInformation;
-        ProcurementInformation = procurementInformation;
-        Category = category;
-        Stock = stock;
-        this.images = images;
-        this.isAdvert = isAdvert;
-        this.isLiked = isLiked;
+    public boolean isUsed() {
+        return isUsed;
+    }
 
+    public void setUsed(boolean used) {
+        isUsed = used;
+    }
+
+    public String getLocation() {
+        return Location;
+    }
+
+    public void setLocation(String location) {
+        Location = location;
     }
 }

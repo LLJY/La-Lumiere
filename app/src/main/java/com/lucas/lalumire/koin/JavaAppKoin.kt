@@ -30,11 +30,13 @@ val manageListingsViewModelModule : Module = module{
 val addEditItemViewModelModule : Module = module{
     single {AddEditItemViewModel(FirestoreRepository(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance())) }
 }
-
+val itemActivityViewModelModule: Module = module{
+    single {ItemViewModel(FirestoreRepository(FirebaseFirestore.getInstance(), FirebaseAuth.getInstance()))}
+}
 fun start(applicationComponent: ApplicationComponent){
     startKoin{
         androidLogger(Level.DEBUG)
         androidContext(applicationComponent)
-        modules(loginViewModelModule, mainViewModelModule, homeViewModelModule, manageListingsViewModelModule, addEditItemViewModelModule)
+        modules(loginViewModelModule, mainViewModelModule, homeViewModelModule, manageListingsViewModelModule, addEditItemViewModelModule, itemActivityViewModelModule)
     }
 }

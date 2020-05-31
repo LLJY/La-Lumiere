@@ -160,7 +160,7 @@ public class AddEditItemViewModel extends ViewModel {
                 Images.add(image2);
                 Images.add(image3);
                 Images.add(image4);
-                Item addingItem = new Item(null, Title, null, null,null,0, null, (float)Price, 0f, Description, paymentTypes.get(paymentTypesSelectedIndex), procurementTypes.get(procurementTypesSelectedIndex), categories.get(categoriesSelectedIndex), Stock, null, false,false);
+                Item addingItem = new Item(null, Title, null, null,null,0, null, (float)Price, 0f, Description, paymentTypes.get(paymentTypesSelectedIndex), procurementTypes.get(procurementTypesSelectedIndex), categories.get(categoriesSelectedIndex), Stock, null, false,false, isUsed, Location);
                 final LiveData<Boolean> actionLiveData = firestoreRepository.addItem(addingItem, Images);
                 actionLiveData.observeForever(new Observer<Boolean>() {
                     @Override
