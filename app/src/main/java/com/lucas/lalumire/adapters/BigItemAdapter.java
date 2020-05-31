@@ -46,6 +46,8 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         return itemLikeButtonClickedItem;
     }
 
+    public LiveData<Item> getItemUnlikeButtonClickedItem(){return itemUnLikeButtonClickedItem; }
+
     /**
      * Function that uses Diffutil to update only parts of the recyclerview list,
      * useful as BigItemAdapter is only used on the bigger parts of the app.
@@ -102,21 +104,16 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
         holder.itemLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // notify any observers in fragment/activity and give them the item.
-                itemLikeButtonClickedItem.postValue(item);
-            }
-        });
-        holder.itemLikeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 if(item.isLiked){
                     holder.itemLikeButton.setImageResource(R.drawable.ic_favorite_black_24dp);
                     item.isLiked = false;
                     item.Likes--;
+                    itemUnLikeButtonClickedItem.postValue(item);
                 }else{
                     holder.itemLikeButton.setImageResource(R.drawable.ic_favorite_red_24dp);
                     item.isLiked = true;
                     item.Likes++;
+                    itemLikeButtonClickedItem.postValue(item);
                 }
             }
         });

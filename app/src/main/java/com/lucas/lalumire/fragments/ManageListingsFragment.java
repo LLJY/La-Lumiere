@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.lucas.lalumire.activities.AddEditItemActivity;
+import com.lucas.lalumire.activities.ItemActivity;
 import com.lucas.lalumire.models.Item;
 import com.lucas.lalumire.viewmodels.ManageListingsViewModel;
 import com.lucas.lalumire.databinding.ManageListingsFragmentBinding;
@@ -44,6 +45,24 @@ public class ManageListingsFragment extends Fragment {
                     binding.itemRecycler.setLayoutManager(new GridLayoutManager(getActivity(), 2));
                 }
                 // do nothing otherwise because viewmodel will update the adapter for us.
+                manageListingsViewModelLazy.getValue().bigItemAdapter.getCardViewClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        startItemActivity(item);
+                    }
+                });
+                manageListingsViewModelLazy.getValue().bigItemAdapter.getItemLikeButtonClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        manageListingsViewModelLazy.getValue().likeItem(item);
+                    }
+                });
+                manageListingsViewModelLazy.getValue().bigItemAdapter.getItemUnlikeButtonClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        manageListingsViewModelLazy.getValue().unlikeItem(item);
+                    }
+                });
             }
         });
         binding.addFab.setOnClickListener(new View.OnClickListener() {
@@ -62,6 +81,10 @@ public class ManageListingsFragment extends Fragment {
         binding = ManageListingsFragmentBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
-
+    private void startItemActivity(Item item){
+        Intent intent = new Intent(getActivity(), ItemActivity.class);
+        intent.putExtra("Item", item);
+        startActivity(intent);
+    }
 
 }
