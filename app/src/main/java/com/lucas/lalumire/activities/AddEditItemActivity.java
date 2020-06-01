@@ -27,6 +27,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.lucas.lalumire.Loading;
 import com.lucas.lalumire.R;
 import com.lucas.lalumire.databinding.ActivityAddItemBinding;
+import com.lucas.lalumire.models.Item;
 import com.lucas.lalumire.viewmodels.AddEditItemViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -86,8 +87,10 @@ public class AddEditItemActivity extends AppCompatActivity {
         if (addEditItemViewModelLazy.getValue().isAddNotEdit) {
             // do not show the delete button if it is not editing
             binding.deleteButton.setVisibility(View.GONE);
+            binding.bottomSheet.menuLabel.setText("Add Listing");
         } else {
-            // TODO make Item model serializable and get it here.
+            addEditItemViewModelLazy.getValue().setFieldsForEdit((Item) Objects.requireNonNull(getIntent().getSerializableExtra("Item")));
+            binding.bottomSheet.menuLabel.setText("Edit Listing");
         }
         // get the UI values from view model
         getUIFromViewModel();
@@ -232,8 +235,9 @@ public class AddEditItemActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(addEditItemViewModelLazy.getValue().isAddNotEdit){
-                    if(checkForEmpty()){
+                    if(checkForEmpty(false)){
                         pd = Loading.showWittyLoadingDialog(AddEditItemActivity.this);
+                        // call the add item function from viewmodel and observe
                         addEditItemViewModelLazy.getValue().addItem().observe(AddEditItemActivity.this, new androidx.lifecycle.Observer<Boolean>() {
                             @Override
                             public void onChanged(Boolean aBoolean) {
@@ -249,7 +253,23 @@ public class AddEditItemActivity extends AppCompatActivity {
                         });
                     }
                 }else{
-                    //TODO add EDIT FUNCTIONS
+                    if(checkForEmpty(true)){
+                        pd = Loading.showWittyLoadingDialog(AddEditItemActivity.this);
+                        // call the edit item function from viewmodel and observe
+                        addEditItemViewModelLazy.getValue().editItem().observe(AddEditItemActivity.this, new androidx.lifecycle.Observer<Boolean>() {
+                            @Override
+                            public void onChanged(Boolean aBoolean) {
+                                pd.dismiss();
+                                if(aBoolean) {
+                                    // clear when succeeded
+                                    addEditItemViewModelLazy.getValue().clearEverything();
+                                    AddEditItemActivity.this.onBackPressed();
+                                }else{
+                                    showSnack("An Error has occured");
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -409,21 +429,21 @@ public class AddEditItemActivity extends AppCompatActivity {
      * function to check and warn user for empty fields
      * @return true = successful
      */
-    private boolean checkForEmpty() {
+    private boolean checkForEmpty(boolean skipImages) {
         boolean returnBool = true;
-        if (addEditItemViewModelLazy.getValue().image1 == null) {
+        if (addEditItemViewModelLazy.getValue().image1 == null && !skipImages) {
             returnBool = false;
             showSnack("All 4 Images Required");
         }
-        if (addEditItemViewModelLazy.getValue().image1 == null) {
+        if (addEditItemViewModelLazy.getValue().image1 == null && !skipImages) {
             returnBool = false;
             showSnack("All 4 Images Required");
         }
-        if (addEditItemViewModelLazy.getValue().image1 == null) {
+        if (addEditItemViewModelLazy.getValue().image1 == null && !skipImages) {
             returnBool = false;
             showSnack("All 4 Images Required");
         }
-        if (addEditItemViewModelLazy.getValue().image1 == null) {
+        if (addEditItemViewModelLazy.getValue().image1 == null && !skipImages) {
             returnBool = false;
             showSnack("All 4 Images Required");
         }

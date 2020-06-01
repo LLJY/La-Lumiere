@@ -42,7 +42,9 @@ public class BigItemAdapter extends RecyclerView.Adapter<BigItemAdapter.BigItemV
     public void resetCardClick(){
         cardViewClickedItem.setValue(null);
     }
-
+    public void resetEditClick(){
+        itemEditButtonClickedItem.setValue(null);
+    }
     public LiveData<Item> getItemEditButtonClickedItem() {
         return itemEditButtonClickedItem;
     }

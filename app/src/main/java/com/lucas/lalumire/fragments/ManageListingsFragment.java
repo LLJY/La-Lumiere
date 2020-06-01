@@ -54,6 +54,7 @@ public class ManageListingsFragment extends Fragment {
                         }
                     }
                 });
+                // observe the like/unlike click
                 manageListingsViewModelLazy.getValue().bigItemAdapter.getItemLikeButtonClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
                     @Override
                     public void onChanged(Item item) {
@@ -64,6 +65,20 @@ public class ManageListingsFragment extends Fragment {
                     @Override
                     public void onChanged(Item item) {
                         manageListingsViewModelLazy.getValue().unlikeItem(item);
+                    }
+                });
+                manageListingsViewModelLazy.getValue().bigItemAdapter.getItemEditButtonClickedItem().observe(getViewLifecycleOwner(), new Observer<Item>() {
+                    @Override
+                    public void onChanged(Item item) {
+                        if(item !=null) {
+                            // start the add Item activity
+                            Intent intent = new Intent(getActivity(), AddEditItemActivity.class);
+                            intent.putExtra("Item", item);
+                            intent.putExtra("Add Not Edit", false);
+                            startActivity(intent);
+                            // reset to prevent updates from DiffUtil from launching multiple activities
+                            manageListingsViewModelLazy.getValue().bigItemAdapter.resetEditClick();
+                        }
                     }
                 });
             }

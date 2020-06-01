@@ -444,4 +444,38 @@ public class FirestoreRepository {
             return false;
         }
     }
+
+    /**
+     * Method to send a post request to edit an item
+     * @param item
+     * @return
+     */
+    public boolean editItem(Item item){
+        String url = "https://asia-east2-la-lumire.cloudfunctions.net/updateItem";
+        //send request with current userID as a parameter
+        OkHttpClient client = new OkHttpClient();
+        RequestBody formBody = new FormBody.Builder()
+                .add("userID", mAuth.getCurrentUser().getUid())
+                .add("ListingID", item.ListingID)
+                .add("Title", item.Title)
+                .add("Category", item.Category)
+                .add("Description", item.Description)
+                .add("Price", String.valueOf(item.Price))
+                .add("ProcurementInformation", item.ProcurementInformation)
+                .add("Stock", String.valueOf(item.Stock))
+                .add("TransactionInformation", String.valueOf(item.TransactionInformation))
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .post(formBody)
+                .build();
+        try {
+            Response response = client.newCall(request).execute();
+            assert response.body() != null;
+            return response.body().string().equals("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

@@ -18,6 +18,7 @@ import pl.aprilapps.easyphotopicker.MediaFile;
 
 public class AddEditItemViewModel extends ViewModel {
     // true = add, false = edit;
+    public String listingID;
     public Boolean isAddNotEdit;
     public Bitmap image1;
     public Bitmap image2;
@@ -40,6 +41,38 @@ public class AddEditItemViewModel extends ViewModel {
 
     public AddEditItemViewModel(FirestoreRepository firestoreRepository) {
         this.firestoreRepository = firestoreRepository;
+    }
+
+    public void setFieldsForEdit(final Item item){
+        listingID = item.ListingID;
+        // set to edit mode
+        isAddNotEdit = false;
+        Title = item.Title;
+        Category = item.Category;
+        isUsed = item.isUsed;
+        Price = item.Price;
+        Stock = item.Stock;
+        Description = item.Description;
+        Location = item.Location;
+        if(categories !=null && paymentTypes !=null && procurementTypes!=null) {
+            // set the values if not null
+            categoriesSelectedIndex = categories.indexOf(item.Category);
+            paymentTypesSelectedIndex = paymentTypes.indexOf(item.TransactionInformation);
+            procurementTypesSelectedIndex = procurementTypes.indexOf(item.ProcurementInformation);
+        }else{
+            // if the values are null, get the spinner values/ combobox
+            final LiveData<Boolean> observeTemp = getAllCombos();
+            observeTemp.observeForever(new Observer<Boolean>() {
+                @Override
+                public void onChanged(Boolean aBoolean) {
+                    categoriesSelectedIndex = categories.indexOf(item.Category);
+                    paymentTypesSelectedIndex = paymentTypes.indexOf(item.TransactionInformation);
+                    procurementTypesSelectedIndex = procurementTypes.indexOf(item.ProcurementInformation);
+                    // remove observer to prevent memory leak
+                    observeTemp.removeObserver(this);
+                }
+            });
+        }
     }
 
     public void setMultiple(MediaFile[] images) {
@@ -172,6 +205,19 @@ public class AddEditItemViewModel extends ViewModel {
                 });
         return returnLiveData;
 
+    }
+    public LiveData<Boolean> editItem(){
+        final MutableLiveData<Boolean> returnLiveData = new MutableLiveData<>();
+        // do not block the ui thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Item editItem = new Item(listingID, Title, null, null,null,0, null, (float)Price, 0f, Description, paymentTypes.get(paymentTypesSelectedIndex), procurementTypes.get(procurementTypesSelectedIndex), categories.get(categoriesSelectedIndex), Stock, null, false,false, isUsed, Location);
+                // let the observers know when it is done.
+                returnLiveData.postValue(firestoreRepository.editItem(editItem));
+            }
+        }).start();
+        return  returnLiveData;
     }
 
     /**
